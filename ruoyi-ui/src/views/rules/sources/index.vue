@@ -4,9 +4,9 @@
       <!--用户数据-->
       <el-col :span="24" :xs="24">
         <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="90px">
-          <el-form-item label="数据源名称" prop="userName">
+          <el-form-item label="数据源名称" prop="name">
             <el-input
-              v-model="queryParams.userName"
+              v-model="queryParams.name"
               placeholder="请输入数据源名称"
               clearable
               style="width: 240px"
@@ -264,8 +264,7 @@ export default {
         pageNum: 1,
         pageSize: 10,
         name: undefined,
-        format: undefined,
-        status: undefined
+        format: undefined
       },
       // 列信息
       columns: [

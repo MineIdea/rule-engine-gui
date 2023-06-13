@@ -1,5 +1,6 @@
 package com.ruoyi.web.controller.rule;
 
+import com.ruoyi.common.annotation.Anonymous;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.page.TableDataInfo;
@@ -18,6 +19,7 @@ import java.util.List;
 public class RuleSourceController extends BaseController {
     private IRuleSourceService ruleSourceService;
 
+    @Anonymous
     @GetMapping("/list")
     public TableDataInfo list(RuleSource ruleSource) {
         startPage();
