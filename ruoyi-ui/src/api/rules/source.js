@@ -7,3 +7,15 @@ export function listSource(query) {
     params: query
   })
 }
+
+export function changeSourceStatus(id, active) {
+  const data = {
+    id: id,
+    status: active
+  }
+  return request({
+    url: '/rules/source/changeStatus',
+    method: 'put',
+    data: data
+  })
+}

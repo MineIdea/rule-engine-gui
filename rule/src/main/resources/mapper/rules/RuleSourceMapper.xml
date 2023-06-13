@@ -24,4 +24,14 @@
         </if>
     </select>
 
+    <update id="updateSource" parameterType="RuleSource">
+        update rule_source
+        <set>
+            <if test="name != null and name != ''">name=#{name},</if>
+            <if test="format != null and format != ''">format=#{format},</if>
+            <if test="data != null and data != ''">data=#{data},</if>
+            <if test="active != null">active=#{active}</if>
+        </set>
+        where id=#{id}
+    </update>
 </mapper>

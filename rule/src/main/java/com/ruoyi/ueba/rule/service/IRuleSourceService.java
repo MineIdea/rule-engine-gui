@@ -9,4 +9,6 @@ import java.util.List;
  */
 public interface IRuleSourceService {
     public List<RuleSource> selectRuleSourceList(RuleSource ruleSource);
+
+    public boolean changeStatus(RuleSource ruleSource);
 }

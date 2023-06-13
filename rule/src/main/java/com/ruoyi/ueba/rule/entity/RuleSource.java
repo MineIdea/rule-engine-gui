@@ -11,7 +11,7 @@ import java.util.Map;
  */
 public class RuleSource {
     @JsonProperty
-    private int id;
+    private Integer id;
     @JsonProperty
     private String name;
     @JsonProperty

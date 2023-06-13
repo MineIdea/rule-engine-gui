@@ -28,7 +28,7 @@
               icon="el-icon-plus"
               size="mini"
               @click="handleAdd"
-              v-hasPermi="['system:user:add']"
+              v-hasPermi="['rule:source:add']"
             >新增</el-button>
           </el-col>
           <el-col :span="1.5">
@@ -39,7 +39,7 @@
               size="mini"
               :disabled="single"
               @click="handleUpdate"
-              v-hasPermi="['system:user:edit']"
+              v-hasPermi="['rule:source:edit']"
             >修改</el-button>
           </el-col>
           <el-col :span="1.5">
@@ -50,7 +50,7 @@
               size="mini"
               :disabled="multiple"
               @click="handleDelete"
-              v-hasPermi="['system:user:remove']"
+              v-hasPermi="['rule:source:remove']"
             >删除</el-button>
           </el-col>
           <right-toolbar :showSearch.sync="showSearch" @queryTable="getList" :columns="columns"></right-toolbar>
@@ -194,7 +194,7 @@
 </style>
 
 <script>
-import {listSource} from "@/api/rules/source"
+import {listSource, changeSourceStatus} from "@/api/rules/source"
 import { listUser, getUser, delUser, addUser, updateUser, resetUserPwd, changeUserStatus, deptTreeSelect } from "@/api/system/user";
 import { getToken } from "@/utils/auth";
 import Treeselect from "@riophae/vue-treeselect";
@@ -333,14 +333,9 @@ export default {
     };
   },
   watch: {
-    // 根据名称筛选部门树
-    deptName(val) {
-      this.$refs.tree.filter(val);
-    }
   },
   created() {
     this.getList();
-    this.getDeptTree();
     this.getConfigKey("sys.user.initPassword").then(response => {
       this.initPassword = response.msg;
     });
@@ -356,27 +351,11 @@ export default {
         }
       );
     },
-    /** 查询部门下拉树结构 */
-    getDeptTree() {
-      deptTreeSelect().then(response => {
-        this.deptOptions = response.data;
-      });
-    },
-    // 筛选节点
-    filterNode(value, data) {
-      if (!value) return true;
-      return data.label.indexOf(value) !== -1;
-    },
-    // 节点单击事件
-    handleNodeClick(data) {
-      this.queryParams.deptId = data.id;
-      this.handleQuery();
-    },
-    // 用户状态修改
+    // 数据源状态修改
     handleStatusChange(row) {
-      let text = row.status === "0" ? "启用" : "停用";
+      let text = row.active === true ? "启用" : "停用";
       this.$modal.confirm('确认要"' + text + '""' + row.name + '"数据源吗？').then(function() {
-        return changeUserStatus(row.userId, row.status);
+        return changeSourceStatus(row.id, row.active);
       }).then(() => {
         this.$modal.msgSuccess(text + "成功");
       }).catch(function() {
@@ -391,19 +370,6 @@ export default {
     // 表单重置
     reset() {
       this.form = {
-        userId: undefined,
-        deptId: undefined,
-        userName: undefined,
-        nickName: undefined,
-        password: undefined,
-        phonenumber: undefined,
-        email: undefined,
-        sex: undefined,
-        status: "0",
-        remark: undefined,
-        postIds: [],
-        roleIds: [],
-        fields: []
       };
       this.resetForm("form");
     },
@@ -416,7 +382,6 @@ export default {
     resetQuery() {
       this.dateRange = [];
       this.resetForm("queryForm");
-      this.queryParams.deptId = undefined;
       this.$refs.tree.setCurrentKey(null);
       this.handleQuery();
     },
@@ -425,19 +390,6 @@ export default {
       this.ids = selection.map(item => item.userId);
       this.single = selection.length != 1;
       this.multiple = !selection.length;
-    },
-    // 更多操作触发
-    handleCommand(command, row) {
-      switch (command) {
-        case "handleResetPwd":
-          this.handleResetPwd(row);
-          break;
-        case "handleAuthRole":
-          this.handleAuthRole(row);
-          break;
-        default:
-          break;
-      }
     },
     /** 新增按钮操作 */
     handleAdd() {

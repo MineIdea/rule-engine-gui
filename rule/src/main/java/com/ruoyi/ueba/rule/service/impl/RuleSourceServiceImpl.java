@@ -14,10 +14,16 @@ import java.util.List;
 @Service
 public class RuleSourceServiceImpl implements IRuleSourceService {
     @Autowired
+    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     private RuleSourceMapper ruleSourceMapper;
 
     @Override
     public List<RuleSource> selectRuleSourceList(RuleSource ruleSource) {
         return ruleSourceMapper.selectRuleSources(ruleSource);
+    }
+
+    @Override
+    public boolean changeStatus(RuleSource ruleSource) {
+        return ruleSourceMapper.updateSource(ruleSource) > 0;
     }
 }

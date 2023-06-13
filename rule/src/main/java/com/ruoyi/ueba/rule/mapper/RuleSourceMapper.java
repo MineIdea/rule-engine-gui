@@ -9,4 +9,6 @@ import java.util.List;
  */
 public interface RuleSourceMapper {
     public List<RuleSource> selectRuleSources(RuleSource ruleSource);
+
+    public int updateSource(RuleSource ruleSource);
 }
