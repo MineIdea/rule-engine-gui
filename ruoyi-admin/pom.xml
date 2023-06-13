@@ -61,6 +61,11 @@
             <artifactId>ruoyi-generator</artifactId>
         </dependency>
 
+        <!-- 规则引擎-->
+        <dependency>
+            <groupId>com.ruoyi</groupId>
+            <artifactId>ueba-rule</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

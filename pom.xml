@@ -170,6 +170,14 @@
                 <version>${ruoyi.version}</version>
             </dependency>
 
+            <!-- 规则引擎-->
+            <dependency>
+                <groupId>com.ruoyi</groupId>
+                <artifactId>ueba-rule</artifactId>
+                <version>${ruoyi.version}</version>
+            </dependency>
+
+
         </dependencies>
     </dependencyManagement>
 
@@ -180,6 +188,7 @@
         <module>ruoyi-quartz</module>
         <module>ruoyi-generator</module>
         <module>ruoyi-common</module>
+        <module>rule</module>
     </modules>
     <packaging>pom</packaging>
 

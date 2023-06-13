@@ -16,5 +16,8 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
         <!-- 使用驼峰命名法转换字段 -->
 		<!-- <setting name="mapUnderscoreToCamelCase" value="true"/> -->
 	</settings>
-	
+
+    <typeAliases>
+        <typeAlias type="com.ruoyi.ueba.rule.entity.RuleSource" alias="RuleSource"/>
+    </typeAliases>
 </configuration>

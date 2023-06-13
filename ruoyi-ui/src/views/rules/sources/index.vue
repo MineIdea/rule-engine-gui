@@ -56,21 +56,20 @@
           <right-toolbar :showSearch.sync="showSearch" @queryTable="getList" :columns="columns"></right-toolbar>
         </el-row>
 
-        <el-table v-loading="loading" :data="userList" @selection-change="handleSelectionChange">
+        <el-table v-loading="loading" :data="sourceList" @selection-change="handleSelectionChange">
           <el-table-column type="selection" width="50" align="center" />
-          <el-table-column label="数据源id" align="center" key="sourceId" prop="sourceId" v-if="columns[0].visible" />
-          <el-table-column label="数据源名称" align="center" key="sourceName" prop="sourceName" v-if="columns[1].visible" :show-overflow-tooltip="true" />
-          <el-table-column label="状态" align="center" key="status" v-if="columns[5].visible">
+          <el-table-column label="数据源id" align="center" key="id" prop="id" v-if="columns[0].visible" />
+          <el-table-column label="名称" align="center" key="name" prop="name" v-if="columns[1].visible" :show-overflow-tooltip="true" />
+          <el-table-column label="格式" align="center" key="format" prop="format" v-if="columns[2].visible" :show-overflow-tooltip="true" />
+          <el-table-column label="状态" align="center" key="status" v-if="columns[3].visible">
             <template slot-scope="scope">
               <el-switch
-                v-model="scope.row.status"
-                active-value="0"
-                inactive-value="1"
+                v-model="scope.row.active"
                 @change="handleStatusChange(scope.row)"
               ></el-switch>
             </template>
           </el-table-column>
-          <el-table-column label="创建时间" align="center" prop="createTime" v-if="columns[6].visible" width="160">
+          <el-table-column label="创建时间" align="center" prop="createTime" v-if="columns[4].visible" width="160">
             <template slot-scope="scope">
               <span>{{ parseTime(scope.row.createTime) }}</span>
             </template>
@@ -115,15 +114,15 @@
       <el-form ref="form" :model="form" label-width="90px">
         <el-row>
           <el-col :span="12">
-            <el-form-item label="数据源名称" prop="sourceName">
-              <el-input v-model="form.sourceName" placeholder="请输入数据源名称" maxlength="30" />
+            <el-form-item label="数据源名称" prop="name">
+              <el-input v-model="form.name" placeholder="请输入数据源名称" maxlength="30" />
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="12">
             <el-form-item label="数据源格式" prop="format">
-              <el-select v-model="form.sourceFormat" placeholder="数据源格式">
+              <el-select v-model="form.format" placeholder="格式">
                 <el-option
                   v-for="item in sourceFormats"
                   :key="item.value"
@@ -195,6 +194,7 @@
 </style>
 
 <script>
+import {listSource} from "@/api/rules/source"
 import { listUser, getUser, delUser, addUser, updateUser, resetUserPwd, changeUserStatus, deptTreeSelect } from "@/api/system/user";
 import { getToken } from "@/utils/auth";
 import Treeselect from "@riophae/vue-treeselect";
@@ -219,7 +219,7 @@ export default {
       // 总条数
       total: 0,
       // 用户表格数据
-      userList: null,
+      sourceList: null,
       // 弹出层标题
       title: "",
       // 部门树选项
@@ -263,20 +263,17 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        userName: undefined,
-        phonenumber: undefined,
-        status: undefined,
-        deptId: undefined
+        name: undefined,
+        format: undefined,
+        status: undefined
       },
       // 列信息
       columns: [
-        { key: 0, label: `用户编号`, visible: true },
-        { key: 1, label: `用户名称`, visible: true },
-        { key: 2, label: `用户昵称`, visible: true },
-        { key: 3, label: `部门`, visible: true },
-        { key: 4, label: `手机号码`, visible: true },
-        { key: 5, label: `状态`, visible: true },
-        { key: 6, label: `创建时间`, visible: true }
+        { key: 0, label: `数据源id`, visible: true },
+        { key: 1, label: `名称`, visible: true },
+        { key: 2, label: `格式`, visible: true },
+        { key: 3, label: `状态`, visible: true },
+        { key: 4, label: `创建时间`, visible: true }
       ],
       // 表单校验
       rules: {
@@ -352,8 +349,8 @@ export default {
     /** 查询列表 */
     getList() {
       this.loading = true;
-      listUser(this.addDateRange(this.queryParams, this.dateRange)).then(response => {
-          this.userList = response.rows;
+      listSource(this.addDateRange(this.queryParams, this.dateRange)).then(response => {
+          this.sourceList = response.rows;
           this.total = response.total;
           this.loading = false;
         }
@@ -378,7 +375,7 @@ export default {
     // 用户状态修改
     handleStatusChange(row) {
       let text = row.status === "0" ? "启用" : "停用";
-      this.$modal.confirm('确认要"' + text + '""' + row.userName + '"用户吗？').then(function() {
+      this.$modal.confirm('确认要"' + text + '""' + row.name + '"数据源吗？').then(function() {
         return changeUserStatus(row.userId, row.status);
       }).then(() => {
         this.$modal.msgSuccess(text + "成功");
@@ -491,7 +488,7 @@ export default {
     submitForm: function() {
       this.$refs["form"].validate(valid => {
         if (valid) {
-          if (this.form.sourceName != undefined) {
+          if (this.form.name != undefined) {
             updateUser(this.form).then(response => {
               this.$modal.msgSuccess("修改成功");
               this.open = false;
