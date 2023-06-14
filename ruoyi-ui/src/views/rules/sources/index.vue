@@ -474,17 +474,17 @@ export default {
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
-      const userId = row.userId || this.ids;
-      getSource(userId).then(response => {
-        this.form = response.data;
-        this.postOptions = response.posts;
-        this.roleOptions = response.roles;
-        this.$set(this.form, "postIds", response.postIds);
-        this.$set(this.form, "roleIds", response.roleIds);
-        this.open = true;
-        this.title = "修改用户";
-        this.form.password = "";
-      });
+      this.open = true;
+      this.title = "修改数据源";
+      var data = this.sourceList.find(item => item.id === row.id).data;
+      this.form.name = data.name
+      this.form.format = data.format
+      this.form.desc = data.desc
+      this.form.type = data.type
+      this.form.topic = data.topic
+      this.form.fields = data.fields
+      this.form.id = row.id
+      this.fieldsCount = this.form.fields.length
     },
     /** 提交按钮 */
     submitForm: function() {
@@ -530,7 +530,6 @@ export default {
         this.form.fields = []
       }
       this.form.fields.push({id:this.fieldsCount, name: '', data_type: ''})
-      console.log(this.form.fields)
     },
     changeWord() {
       this.$forceUpdate()
