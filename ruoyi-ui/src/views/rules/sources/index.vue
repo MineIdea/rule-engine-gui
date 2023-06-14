@@ -128,6 +128,13 @@
         </el-row>
         <el-row>
           <el-col :span="12">
+            <el-form-item label="数据源描述" prop="desc">
+              <el-input v-model="form.desc" placeholder="请输入数据源描述" maxlength="30" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
             <el-form-item label="数据源格式" prop="format">
               <el-select v-model="form.format" placeholder="格式">
                 <el-option
@@ -137,23 +144,29 @@
                   :value="item.value">
                 </el-option>
               </el-select>
-<!--              <el-input v-model="form.format" placeholder="请输入手机号码" maxlength="11" />-->
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
-          <el-col :span="24">
-            <el-form-item label="备注">
-              <el-input v-model="form.remark" type="textarea" placeholder="请输入内容"></el-input>
+          <el-col :span="12">
+            <el-form-item label="数据源类型" prop="type">
+              <el-select v-model="form.type" placeholder="数据源类型">
+                <el-option
+                  v-for="item in sourceTypes"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-select>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
-          <el-col :span="24">
+          <el-col :span="12">
+            <el-form-item label="订阅topic" prop="topic">
+              <el-input v-model="form.topic" placeholder="请输入订阅topic" maxlength="30" />
+            </el-form-item>
           </el-col>
-        </el-row>
-        <el-row>
-          <el-button type="primary" @click="addFields">添加字段</el-button>
         </el-row>
         <el-scrollbar height="400px" v-if="form.fields && form.fields.length > 0">
           <el-row :span="24" v-for="(row, index) in form.fields">
@@ -176,6 +189,9 @@
             </el-col>
           </el-row>
         </el-scrollbar>
+        <el-row>
+          <el-button type="primary" @click="addFields">添加字段</el-button>
+        </el-row>
 
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -254,7 +270,6 @@
 
 <script>
 import {listSource, changeSourceStatus} from "@/api/rules/source"
-import { listUser, getUser, delUser, addUser, updateUser, resetUserPwd, changeUserStatus, deptTreeSelect } from "@/api/system/user";
 import { getToken } from "@/utils/auth";
 import Treeselect from "@riophae/vue-treeselect";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
@@ -339,6 +354,12 @@ export default {
         {
           "label": "avro",
           "value": "avro"
+        }
+      ],
+      sourceTypes: [
+        {
+          "label": "kafka",
+          "value": "kafka"
         }
       ],
       fieldTypes: [
@@ -454,10 +475,11 @@ export default {
     /** 新增按钮操作 */
     handleAdd() {
       this.reset();
-      getUser().then(response => {
+      this.open = true;
+
+      getSource().then(response => {
         this.postOptions = response.posts;
         this.roleOptions = response.roles;
-        this.open = true;
         this.title = "添加用户";
         this.form.password = this.initPassword;
       });
@@ -466,7 +488,7 @@ export default {
     handleUpdate(row) {
       this.reset();
       const userId = row.userId || this.ids;
-      getUser(userId).then(response => {
+      getSource(userId).then(response => {
         this.form = response.data;
         this.postOptions = response.posts;
         this.roleOptions = response.roles;
@@ -482,13 +504,13 @@ export default {
       this.$refs["form"].validate(valid => {
         if (valid) {
           if (this.form.name != undefined) {
-            updateUser(this.form).then(response => {
+            updateSource(this.form).then(response => {
               this.$modal.msgSuccess("修改成功");
               this.open = false;
               this.getList();
             });
           } else {
-            addUser(this.form).then(response => {
+            updateSource(this.form).then(response => {
               this.$modal.msgSuccess("新增成功");
               this.open = false;
               this.getList();
@@ -501,7 +523,7 @@ export default {
     handleDelete(row) {
       const userIds = row.userId || this.ids;
       this.$modal.confirm('是否确认删除用户编号为"' + userIds + '"的数据项？').then(function() {
-        return delUser(userIds);
+        return delSource(userIds);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");
@@ -512,6 +534,7 @@ export default {
         this.form.fields = []
       }
       this.form.fields.push({})
+      console.log(this.form.fields)
     }
   }
 };
