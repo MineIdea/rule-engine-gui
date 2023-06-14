@@ -168,27 +168,32 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-scrollbar height="400px" v-if="form.fields && form.fields.length > 0">
-          <el-row :span="24" v-for="(row, index) in form.fields">
-            <el-col :span="12">
-              <el-form-item label="字段">
-                <el-input v-model="row.fieldName" placeholder="字段名称"></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="12">
-              <el-form-item label="字段类型">
-                <el-select v-model="row.fieldType" placeholder="字段类型">
-                  <el-option
-                    v-for="item in fieldTypes"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value">
-                  </el-option>
-                </el-select>
-              </el-form-item>
-            </el-col>
-          </el-row>
-        </el-scrollbar>
+        <template v-if="fieldsCount >0" >
+          <el-scrollbar height="400px">
+            <template v-for="(newRow, index) in form.fields">
+              <el-row :span="24">
+                <el-col :span="12">
+                  <el-form-item label="字段">
+                    <el-input v-model="newRow.name" placeholder="字段名称" @input="changeWord"/>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                  <el-form-item label="字段类型">
+                    <el-select v-model="newRow.data_type" placeholder="字段类型" @input="changeWord">
+                      <el-option
+                        v-for="item in fieldTypes"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                      </el-option>
+                    </el-select>
+                  </el-form-item>
+                </el-col>
+              </el-row>
+            </template>
+          </el-scrollbar>
+        </template>
+
         <el-row>
           <el-button type="primary" @click="addFields">添加字段</el-button>
         </el-row>
@@ -205,7 +210,7 @@
       <el-descriptions
         class="margin-top"
         :column="1"
-        :size="size"
+        size="default"
         border
       >
         <el-descriptions-item label="数据源名称">
@@ -231,7 +236,7 @@
             <el-descriptions
               class="margin-top"
               :column="1"
-              :size="size"
+              size="default"
               border
             >
               <el-descriptions-item label="字段名称">{{item.name}}</el-descriptions-item>
@@ -311,6 +316,7 @@ export default {
       postOptions: [],
       // 角色选项
       roleOptions: [],
+      fieldsCount: 0,
       // 表单参数
       form: {
         "fields": []
@@ -399,7 +405,7 @@ export default {
           "label": "object",
           "value": "object"
         }
-      ]
+      ],
     };
   },
   watch: {
@@ -473,16 +479,17 @@ export default {
       this.sourceDetail["data"] = row.data;
     },
     /** 新增按钮操作 */
+    /** 新增按钮操作 */
     handleAdd() {
       this.reset();
       this.open = true;
 
-      getSource().then(response => {
-        this.postOptions = response.posts;
-        this.roleOptions = response.roles;
-        this.title = "添加用户";
-        this.form.password = this.initPassword;
-      });
+      // getSource().then(response => {
+      //   this.postOptions = response.posts;
+      //   this.roleOptions = response.roles;
+      //   this.title = "添加用户";
+      //   this.form.password = this.initPassword;
+      // });
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -530,11 +537,15 @@ export default {
       }).catch(() => {});
     },
     addFields() {
+      this.fieldsCount++;
       if (!this.form.fields) {
         this.form.fields = []
       }
-      this.form.fields.push({})
+      this.form.fields.push({id:this.fieldsCount, name: '', data_type: ''})
       console.log(this.form.fields)
+    },
+    changeWord() {
+      this.$forceUpdate()
     }
   }
 };
