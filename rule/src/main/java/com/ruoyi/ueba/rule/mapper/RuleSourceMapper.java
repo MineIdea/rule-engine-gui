@@ -11,4 +11,6 @@ public interface RuleSourceMapper {
     public List<RuleSource> selectRuleSources(RuleSource ruleSource);
 
     public int updateSource(RuleSource ruleSource);
+
+    public int insertSource(RuleSource ruleSource);
 }

@@ -29,9 +29,20 @@
         <set>
             <if test="name != null and name != ''">name=#{name},</if>
             <if test="format != null and format != ''">format=#{format},</if>
-            <if test="data != null and data != ''">data=#{data},</if>
+            <if test="data != null and data != ''">data=#{data,typeHandler=com.ruoyi.ueba.rule.mapper.handler.JsonTypeHandler},</if>
             <if test="active != null">active=#{active}</if>
         </set>
         where id=#{id}
     </update>
+
+    <insert id="insertSource" parameterType="RuleSource">
+        insert into rule_source
+            (name, format, data, create_time) values
+        (
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="format != null and format != ''">#{format},</if>
+            <if test="data != null">#{data,typeHandler=com.ruoyi.ueba.rule.mapper.handler.JsonTypeHandler},</if>
+            now()
+        )
+    </insert>
 </mapper>

@@ -11,4 +11,8 @@ public interface IRuleSourceService {
     public List<RuleSource> selectRuleSourceList(RuleSource ruleSource);
 
     public boolean changeStatus(RuleSource ruleSource);
+
+    public boolean addSource(RuleSource ruleSource);
+
+    public boolean updateSource(RuleSource ruleSource);
 }

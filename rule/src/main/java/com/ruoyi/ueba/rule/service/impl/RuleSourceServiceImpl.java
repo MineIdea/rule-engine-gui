@@ -26,4 +26,14 @@ public class RuleSourceServiceImpl implements IRuleSourceService {
     public boolean changeStatus(RuleSource ruleSource) {
         return ruleSourceMapper.updateSource(ruleSource) > 0;
     }
+
+    @Override
+    public boolean addSource(RuleSource ruleSource) {
+        return ruleSourceMapper.insertSource(ruleSource) > 0;
+    }
+
+    @Override
+    public boolean updateSource(RuleSource ruleSource) {
+        return ruleSourceMapper.updateSource(ruleSource) > 0;
+    }
 }

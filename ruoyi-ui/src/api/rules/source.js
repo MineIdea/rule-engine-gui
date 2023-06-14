@@ -19,3 +19,19 @@ export function changeSourceStatus(id, active) {
     data: data
   })
 }
+
+export function updateSource(data) {
+  return request({
+    url: '/rules/source/update',
+    method: 'put',
+    data: data
+  })
+}
+
+export function addSource(data) {
+  return request({
+    url: 'rules/source/add',
+    method: 'put',
+    data: data
+  })
+}

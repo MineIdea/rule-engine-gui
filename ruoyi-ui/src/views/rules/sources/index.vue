@@ -274,7 +274,7 @@
 </style>
 
 <script>
-import {listSource, changeSourceStatus} from "@/api/rules/source"
+import {listSource, changeSourceStatus, updateSource, addSource} from "@/api/rules/source"
 import { getToken } from "@/utils/auth";
 import Treeselect from "@riophae/vue-treeselect";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
@@ -297,34 +297,17 @@ export default {
       showSearch: true,
       // 总条数
       total: 0,
-      // 用户表格数据
-      sourceList: null,
       // 弹出层标题
       title: "",
-      // 部门树选项
-      deptOptions: undefined,
       // 是否显示弹出层
       open: false,
       detailOpen: false,
-      // 部门名称
-      deptName: undefined,
-      // 默认密码
-      initPassword: undefined,
-      // 日期范围
-      dateRange: [],
-      // 岗位选项
-      postOptions: [],
-      // 角色选项
-      roleOptions: [],
       fieldsCount: 0,
       // 表单参数
       form: {
         "fields": []
       },
-      defaultProps: {
-        children: "children",
-        label: "label"
-      },
+      sourceList: [],
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -406,15 +389,12 @@ export default {
           "value": "object"
         }
       ],
-    };
+    }
   },
   watch: {
   },
   created() {
     this.getList();
-    this.getConfigKey("sys.user.initPassword").then(response => {
-      this.initPassword = response.msg;
-    });
   },
   methods: {
     /** 查询列表 */
@@ -446,7 +426,7 @@ export default {
     // 表单重置
     reset() {
       this.form = {
-      };
+      }
       this.resetForm("form");
     },
     /** 搜索按钮操作 */
@@ -510,14 +490,22 @@ export default {
     submitForm: function() {
       this.$refs["form"].validate(valid => {
         if (valid) {
-          if (this.form.name != undefined) {
+          if (this.form.id != undefined) {
             updateSource(this.form).then(response => {
               this.$modal.msgSuccess("修改成功");
               this.open = false;
               this.getList();
             });
           } else {
-            updateSource(this.form).then(response => {
+            var data = {}
+            data["name"] = this.form.name;
+            data["format"] = this.form.format;
+            data["desc"] = this.form.desc;
+            data["type"] = this.form.type;
+            data["topic"] = this.form.topic
+            data["fields"] = this.form.fields;
+            this.form.data = data
+            addSource(this.form).then(response => {
               this.$modal.msgSuccess("新增成功");
               this.open = false;
               this.getList();
@@ -548,5 +536,5 @@ export default {
       this.$forceUpdate()
     }
   }
-};
+}
 </script>

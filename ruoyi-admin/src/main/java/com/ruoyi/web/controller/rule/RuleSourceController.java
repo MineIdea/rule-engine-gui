@@ -19,7 +19,6 @@ import java.util.List;
 public class RuleSourceController extends BaseController {
     private IRuleSourceService ruleSourceService;
 
-    @Anonymous
     @GetMapping("/list")
     public TableDataInfo list(RuleSource ruleSource) {
         startPage();
@@ -30,6 +29,16 @@ public class RuleSourceController extends BaseController {
     @PutMapping("/changeStatus")
     public AjaxResult changeStatus(@RequestBody RuleSource ruleSource) {
         return toAjax(ruleSourceService.changeStatus(ruleSource));
+    }
+
+    @PutMapping("/add")
+    public AjaxResult addSource(@RequestBody RuleSource ruleSource) {
+        return toAjax(ruleSourceService.addSource(ruleSource));
+    }
+
+    @PutMapping("/update")
+    public AjaxResult updateSource(@RequestBody RuleSource ruleSource) {
+        return toAjax(ruleSourceService.updateSource(ruleSource));
     }
 
     @Autowired
