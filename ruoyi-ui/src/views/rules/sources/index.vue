@@ -85,15 +85,22 @@
                 size="mini"
                 type="text"
                 icon="el-icon-edit"
+                @click="showDetail(scope.row)"
+                v-hasPermi="['rule:source:list']"
+              >详情</el-button>
+              <el-button
+                size="mini"
+                type="text"
+                icon="el-icon-edit"
                 @click="handleUpdate(scope.row)"
-                v-hasPermi="['system:user:edit']"
+                v-hasPermi="['rule:source:edit']"
               >修改</el-button>
               <el-button
                 size="mini"
                 type="text"
                 icon="el-icon-delete"
                 @click="handleDelete(scope.row)"
-                v-hasPermi="['system:user:remove']"
+                v-hasPermi="['rule:source:remove']"
               >删除</el-button>
             </template>
           </el-table-column>
@@ -176,6 +183,48 @@
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
+
+    <!-- 添加或修改数据源对话框 -->
+    <el-dialog :title="title" :visible.sync="detailOpen" width="600px" append-to-body>
+      <el-descriptions
+        class="margin-top"
+        :column="1"
+        :size="size"
+        border
+      >
+        <el-descriptions-item label="数据源名称">
+          {{sourceDetail.name}}
+        </el-descriptions-item>
+        <el-descriptions-item label="数据源描述">
+          {{sourceDetail.data.desc}}
+        </el-descriptions-item>
+        <el-descriptions-item label="数据源格式">
+          {{sourceDetail.format}}
+        </el-descriptions-item>
+        <el-descriptions-item label="数据源类型">
+          {{sourceDetail.data.type}}
+        </el-descriptions-item>
+        <el-descriptions-item label="订阅topic">
+          {{sourceDetail.data.topic}}
+        </el-descriptions-item>
+        <el-descriptions-item label="时间属性字段">
+          {{sourceDetail.data.event_time_field}}
+        </el-descriptions-item>
+        <template v-for="(item, index) in sourceDetail.data.fields">
+          <el-descriptions-item :label="'字段'+index">
+            <el-descriptions
+              class="margin-top"
+              :column="1"
+              :size="size"
+              border
+            >
+              <el-descriptions-item label="字段名称">{{item.name}}</el-descriptions-item>
+              <el-descriptions-item label="字段类型">{{item.data_type}}</el-descriptions-item>
+            </el-descriptions>
+          </el-descriptions-item>
+        </template>
+      </el-descriptions>
+    </el-dialog>
   </div>
 </template>
 
@@ -190,6 +239,16 @@
   border-radius: 4px;
   background: var(--el-color-primary-light-9);
   color: var(--el-color-primary);
+}
+.el-descriptions {
+   margin-top: 20px;
+ }
+.cell-item {
+  display: flex;
+  align-items: center;
+}
+.margin-top {
+  margin-top: 20px;
 }
 </style>
 
@@ -226,6 +285,7 @@ export default {
       deptOptions: undefined,
       // 是否显示弹出层
       open: false,
+      detailOpen: false,
       // 部门名称
       deptName: undefined,
       // 默认密码
@@ -244,21 +304,6 @@ export default {
         children: "children",
         label: "label"
       },
-      // 用户导入参数
-      upload: {
-        // 是否显示弹出层（用户导入）
-        open: false,
-        // 弹出层标题（用户导入）
-        title: "",
-        // 是否禁用上传
-        isUploading: false,
-        // 是否更新已经存在的用户数据
-        updateSupport: 0,
-        // 设置上传的请求头部
-        headers: { Authorization: "Bearer " + getToken() },
-        // 上传的地址
-        url: process.env.VUE_APP_BASE_API + "/system/user/importData"
-      },
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -276,6 +321,11 @@ export default {
       ],
       // 表单校验
       rules: {
+      },
+      sourceDetail: {
+        data: {
+
+        }
       },
       sourceFormats: [
         {
@@ -387,8 +437,19 @@ export default {
     // 多选框选中数据
     handleSelectionChange(selection) {
       this.ids = selection.map(item => item.userId);
-      this.single = selection.length != 1;
+      this.single = selection.length !== 1;
       this.multiple = !selection.length;
+    },
+    showDetail(row) {
+      this.reset();
+      this.title = "数据源详情";
+      this.detailOpen = true;
+      this.sourceDetail = {}
+      this.sourceDetail["id"] = row.id;
+      this.sourceDetail["name"] = row.name;
+      this.sourceDetail["format"] = row.format;
+      this.sourceDetail["active"] = row.active;
+      this.sourceDetail["data"] = row.data;
     },
     /** 新增按钮操作 */
     handleAdd() {
@@ -415,25 +476,6 @@ export default {
         this.title = "修改用户";
         this.form.password = "";
       });
-    },
-    /** 重置密码按钮操作 */
-    handleResetPwd(row) {
-      this.$prompt('请输入"' + row.userName + '"的新密码', "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        closeOnClickModal: false,
-        inputPattern: /^.{5,20}$/,
-        inputErrorMessage: "用户密码长度必须介于 5 和 20 之间"
-      }).then(({ value }) => {
-        resetUserPwd(row.userId, value).then(response => {
-          this.$modal.msgSuccess("修改成功，新密码是：" + value);
-        });
-      }).catch(() => {});
-    },
-    /** 分配角色操作 */
-    handleAuthRole: function(row) {
-      const userId = row.userId;
-      this.$router.push("/system/user-auth/role/" + userId);
     },
     /** 提交按钮 */
     submitForm: function() {
