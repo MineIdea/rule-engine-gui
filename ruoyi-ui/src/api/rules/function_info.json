@@ -1,0 +1,491 @@
+{
+  "scalar" : {
+    "boolean" : {
+      "!=" : {
+        "type" : "binary",
+        "leftType" : "boolean",
+        "returnType" : "boolean",
+        "rightType" : "boolean"
+      },
+      "=" : {
+        "type" : "binary",
+        "leftType" : "boolean",
+        "returnType" : "boolean",
+        "rightType" : "boolean"
+      }
+    },
+    "string" : {
+      "isNotInNetRanges" : {
+        "type" : "binary",
+        "leftType" : "string",
+        "returnType" : "boolean",
+        "rightType" : "list"
+      },
+      "isNotInSubnets" : {
+        "type" : "binary",
+        "leftType" : "string",
+        "returnType" : "boolean",
+        "rightType" : "list"
+      },
+      "endsWithAny" : {
+        "type" : "binary",
+        "leftType" : "string",
+        "returnType" : "boolean",
+        "rightType" : "list"
+      },
+      "containsAll" : {
+        "type" : "binary",
+        "leftType" : "string",
+        "returnType" : "boolean",
+        "rightType" : "list"
+      },
+      "containsAny" : {
+        "type" : "binary",
+        "leftType" : "string",
+        "returnType" : "boolean",
+        "rightType" : "list"
+      },
+      "length" : {
+        "type" : "unary",
+        "leftType" : "string",
+        "returnType" : "int"
+      },
+      "startsWithAny" : {
+        "type" : "binary",
+        "leftType" : "string",
+        "returnType" : "boolean",
+        "rightType" : "list"
+      },
+      "isSubnet" : {
+        "type" : "binary",
+        "leftType" : "string",
+        "returnType" : "boolean",
+        "rightType" : "string"
+      },
+      "isInNetRanges" : {
+        "type" : "binary",
+        "leftType" : "string",
+        "returnType" : "boolean",
+        "rightType" : "list"
+      },
+      "notStartsWithAny" : {
+        "type" : "binary",
+        "leftType" : "string",
+        "returnType" : "boolean",
+        "rightType" : "list"
+      },
+      "notContainsAny" : {
+        "type" : "binary",
+        "leftType" : "string",
+        "returnType" : "boolean",
+        "rightType" : "list"
+      },
+      "regex" : {
+        "type" : "binary",
+        "leftType" : "string",
+        "returnType" : "boolean",
+        "rightType" : "string"
+      },
+      "contains" : {
+        "type" : "binary",
+        "leftType" : "string",
+        "returnType" : "boolean",
+        "rightType" : "string"
+      },
+      "isInSubnets" : {
+        "type" : "binary",
+        "leftType" : "string",
+        "returnType" : "boolean",
+        "rightType" : "list"
+      },
+      "notContains" : {
+        "type" : "binary",
+        "leftType" : "string",
+        "returnType" : "boolean",
+        "rightType" : "string"
+      },
+      "notEndsWithAny" : {
+        "type" : "binary",
+        "leftType" : "string",
+        "returnType" : "boolean",
+        "rightType" : "list"
+      },
+      "equals" : {
+        "type" : "binary",
+        "leftType" : "string",
+        "returnType" : "boolean",
+        "rightType" : "string"
+      },
+      "endsWith" : {
+        "type" : "binary",
+        "leftType" : "string",
+        "returnType" : "boolean",
+        "rightType" : "string"
+      },
+      "notEquals" : {
+        "type" : "binary",
+        "leftType" : "string",
+        "returnType" : "boolean",
+        "rightType" : "string"
+      },
+      "equalIgnoreCase" : {
+        "type" : "binary",
+        "leftType" : "string",
+        "returnType" : "boolean",
+        "rightType" : "string"
+      },
+      "isNotSubnet" : {
+        "type" : "binary",
+        "leftType" : "string",
+        "returnType" : "boolean",
+        "rightType" : "string"
+      },
+      "startsWith" : {
+        "type" : "binary",
+        "leftType" : "string",
+        "returnType" : "boolean",
+        "rightType" : "string"
+      }
+    },
+    "double" : {
+      "<=" : {
+        "type" : "binary",
+        "leftType" : "double",
+        "returnType" : "boolean",
+        "rightType" : "double"
+      },
+      "<" : {
+        "type" : "binary",
+        "leftType" : "double",
+        "returnType" : "boolean",
+        "rightType" : "double"
+      },
+      "!=" : {
+        "type" : "binary",
+        "leftType" : "double",
+        "returnType" : "boolean",
+        "rightType" : "double"
+      },
+      "=" : {
+        "type" : "binary",
+        "leftType" : "double",
+        "returnType" : "boolean",
+        "rightType" : "double"
+      },
+      ">" : {
+        "type" : "binary",
+        "leftType" : "double",
+        "returnType" : "boolean",
+        "rightType" : "double"
+      },
+      ">=" : {
+        "type" : "binary",
+        "leftType" : "double",
+        "returnType" : "boolean",
+        "rightType" : "double"
+      }
+    },
+    "list" : {
+      "equalsAny" : {
+        "type" : "binary",
+        "leftType" : "list",
+        "returnType" : "boolean",
+        "rightType" : "set"
+      },
+      "containsAll" : {
+        "type" : "binary",
+        "leftType" : "list",
+        "returnType" : "boolean",
+        "rightType" : "set"
+      },
+      "equals" : {
+        "type" : "binary",
+        "leftType" : "list",
+        "returnType" : "boolean",
+        "rightType" : "set"
+      },
+      "containsAny" : {
+        "type" : "binary",
+        "leftType" : "list",
+        "returnType" : "boolean",
+        "rightType" : "set"
+      },
+      "haveIntersection" : {
+        "type" : "binary",
+        "leftType" : "list",
+        "returnType" : "boolean",
+        "rightType" : "set"
+      },
+      "notHaveIntersection" : {
+        "type" : "binary",
+        "leftType" : "list",
+        "returnType" : "boolean",
+        "rightType" : "set"
+      }
+    },
+    "float" : {
+      "<=" : {
+        "type" : "binary",
+        "leftType" : "float",
+        "returnType" : "boolean",
+        "rightType" : "float"
+      },
+      "<" : {
+        "type" : "binary",
+        "leftType" : "float",
+        "returnType" : "boolean",
+        "rightType" : "float"
+      },
+      "!=" : {
+        "type" : "binary",
+        "leftType" : "float",
+        "returnType" : "boolean",
+        "rightType" : "float"
+      },
+      "=" : {
+        "type" : "binary",
+        "leftType" : "float",
+        "returnType" : "boolean",
+        "rightType" : "float"
+      },
+      ">" : {
+        "type" : "binary",
+        "leftType" : "float",
+        "returnType" : "boolean",
+        "rightType" : "float"
+      },
+      ">=" : {
+        "type" : "binary",
+        "leftType" : "float",
+        "returnType" : "boolean",
+        "rightType" : "float"
+      }
+    },
+    "map" : {
+      "get_map_int" : {
+        "type" : "binary",
+        "leftType" : "map",
+        "returnType" : "int",
+        "rightType" : "string"
+      },
+      "get_map_long" : {
+        "type" : "binary",
+        "leftType" : "map",
+        "returnType" : "long",
+        "rightType" : "string"
+      },
+      "get_map_list" : {
+        "type" : "binary",
+        "leftType" : "map",
+        "returnType" : "list",
+        "rightType" : "string"
+      },
+      "get_map_map" : {
+        "type" : "binary",
+        "leftType" : "map",
+        "returnType" : "map",
+        "rightType" : "string"
+      },
+      "get_map_double" : {
+        "type" : "binary",
+        "leftType" : "map",
+        "returnType" : "double",
+        "rightType" : "string"
+      },
+      "get_map_object" : {
+        "type" : "binary",
+        "leftType" : "map",
+        "returnType" : "object",
+        "rightType" : "string"
+      },
+      "get_map_string" : {
+        "type" : "binary",
+        "leftType" : "map",
+        "returnType" : "string",
+        "rightType" : "string"
+      },
+      "get_map_float" : {
+        "type" : "binary",
+        "leftType" : "map",
+        "returnType" : "float",
+        "rightType" : "string"
+      },
+      "get_map_boolean" : {
+        "type" : "binary",
+        "leftType" : "map",
+        "returnType" : "boolean",
+        "rightType" : "string"
+      }
+    },
+    "int" : {
+      "<=" : {
+        "type" : "binary",
+        "leftType" : "int",
+        "returnType" : "boolean",
+        "rightType" : "int"
+      },
+      "<" : {
+        "type" : "binary",
+        "leftType" : "int",
+        "returnType" : "boolean",
+        "rightType" : "int"
+      },
+      "!=" : {
+        "type" : "binary",
+        "leftType" : "int",
+        "returnType" : "boolean",
+        "rightType" : "int"
+      },
+      "=" : {
+        "type" : "binary",
+        "leftType" : "int",
+        "returnType" : "boolean",
+        "rightType" : "int"
+      },
+      ">" : {
+        "type" : "binary",
+        "leftType" : "int",
+        "returnType" : "boolean",
+        "rightType" : "int"
+      },
+      ">=" : {
+        "type" : "binary",
+        "leftType" : "int",
+        "returnType" : "boolean",
+        "rightType" : "int"
+      }
+    },
+    "long" : {
+      "<=" : {
+        "type" : "binary",
+        "leftType" : "long",
+        "returnType" : "boolean",
+        "rightType" : "long"
+      },
+      "timeBetween" : {
+        "type" : "binary",
+        "leftType" : "long",
+        "returnType" : "boolean",
+        "rightType" : "string"
+      },
+      "dateTimeBetween" : {
+        "type" : "binary",
+        "leftType" : "long",
+        "returnType" : "boolean",
+        "rightType" : "string"
+      },
+      "<" : {
+        "type" : "binary",
+        "leftType" : "long",
+        "returnType" : "boolean",
+        "rightType" : "long"
+      },
+      "!=" : {
+        "type" : "binary",
+        "leftType" : "long",
+        "returnType" : "boolean",
+        "rightType" : "long"
+      },
+      "=" : {
+        "type" : "binary",
+        "leftType" : "long",
+        "returnType" : "boolean",
+        "rightType" : "long"
+      },
+      "milliToHour" : {
+        "type" : "unary",
+        "leftType" : "long",
+        "returnType" : "int"
+      },
+      ">" : {
+        "type" : "binary",
+        "leftType" : "long",
+        "returnType" : "boolean",
+        "rightType" : "long"
+      },
+      ">=" : {
+        "type" : "binary",
+        "leftType" : "long",
+        "returnType" : "boolean",
+        "rightType" : "long"
+      },
+      "timesNotBetween" : {
+        "type" : "binary",
+        "leftType" : "long",
+        "returnType" : "boolean",
+        "rightType" : "list"
+      }
+    },
+    "object" : {
+      "isNotNull" : {
+        "type" : "unary",
+        "leftType" : "object",
+        "returnType" : "boolean"
+      },
+      "in" : {
+        "type" : "binary",
+        "leftType" : "object",
+        "returnType" : "boolean",
+        "rightType" : "set"
+      },
+      "isNull" : {
+        "type" : "unary",
+        "leftType" : "object",
+        "returnType" : "boolean"
+      },
+      "notIn" : {
+        "type" : "binary",
+        "leftType" : "object",
+        "returnType" : "boolean",
+        "rightType" : "set"
+      }
+    }
+  },
+  "aggregate" : {
+    "double" : {
+      "sum" : {
+        "type" : "unary",
+        "leftType" : "double",
+        "returnType" : "object"
+      }
+    },
+    "float" : {
+      "sum" : {
+        "type" : "unary",
+        "leftType" : "float",
+        "returnType" : "object"
+      }
+    },
+    "int" : {
+      "sum" : {
+        "type" : "unary",
+        "leftType" : "int",
+        "returnType" : "object"
+      }
+    },
+    "long" : {
+      "sum" : {
+        "type" : "unary",
+        "leftType" : "long",
+        "returnType" : "object"
+      }
+    },
+    "object" : {
+      "uniqueValues" : {
+        "type" : "unary",
+        "leftType" : "object",
+        "returnType" : "object"
+      },
+      "unique" : {
+        "type" : "unary",
+        "leftType" : "object",
+        "returnType" : "object"
+      },
+      "count" : {
+        "type" : "unary",
+        "leftType" : "object",
+        "returnType" : "object"
+      }
+    }
+  }
+}
