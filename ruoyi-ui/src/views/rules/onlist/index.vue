@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <el-row :gutter="20">
-      <!--用户数据-->
+      <!--模型数据-->
       <el-col :span="24" :xs="24">
         <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch"
                  label-width="90px">
@@ -44,18 +44,6 @@
           </el-col>
           <el-col :span="1.5">
             <el-button
-              type="success"
-              plain
-              icon="el-icon-edit"
-              size="mini"
-              :disabled="single"
-              @click="handleUpdate"
-              v-hasPermi="['rule:source:edit']"
-            >修改
-            </el-button>
-          </el-col>
-          <el-col :span="1.5">
-            <el-button
               type="danger"
               plain
               icon="el-icon-delete"
@@ -66,17 +54,15 @@
             >删除
             </el-button>
           </el-col>
-          <right-toolbar :showSearch.sync="showSearch" @queryTable="getSourceList" :columns="columns"></right-toolbar>
+          <right-toolbar :showSearch.sync="showSearch" @queryTable="getRuleList" :columns="columns"></right-toolbar>
         </el-row>
 
-        <el-table v-loading="loading" :data="sourceList" @selection-change="handleSelectionChange">
+        <el-table v-loading="loading" :data="ruleList" @selection-change="handleSelectionChange">
           <el-table-column type="selection" width="50" align="center"/>
-          <el-table-column label="数据源id" align="center" key="id" prop="id" v-if="columns[0].visible"/>
-          <el-table-column label="名称" align="center" key="name" prop="name" v-if="columns[1].visible"
+          <el-table-column label="模型id" align="center" key="id" prop="id" v-if="columns[0].visible"/>
+          <el-table-column label="模型名称" align="center" key="name" prop="name" v-if="columns[1].visible"
                            :show-overflow-tooltip="true"/>
-          <el-table-column label="格式" align="center" key="format" prop="format" v-if="columns[2].visible"
-                           :show-overflow-tooltip="true"/>
-          <el-table-column label="状态" align="center" key="status" v-if="columns[3].visible">
+          <el-table-column label="状态" align="center" key="status" v-if="columns[2].visible">
             <template slot-scope="scope">
               <el-switch
                 v-model="scope.row.active"
@@ -84,7 +70,7 @@
               ></el-switch>
             </template>
           </el-table-column>
-          <el-table-column label="创建时间" align="center" prop="createTime" v-if="columns[4].visible" width="160">
+          <el-table-column label="创建时间" align="center" prop="createTime" v-if="columns[3].visible" width="160">
             <template slot-scope="scope">
               <span>{{ parseTime(scope.row.createTime) }}</span>
             </template>
@@ -129,7 +115,7 @@
           :total="total"
           :page.sync="queryParams.pageNum"
           :limit.sync="queryParams.pageSize"
-          @pagination="getSourceList"
+          @pagination="getRuleList"
         />
       </el-col>
     </el-row>
@@ -394,6 +380,7 @@
 
 <script>
 import {listSource, changeSourceStatus, updateSource, addSource,} from "@/api/rules/source"
+import {listRule, changeRuleStatus, updateRule, addRule} from "@/api/rules/rule"
 import {getToken} from "@/utils/auth";
 import Treeselect from "@riophae/vue-treeselect";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
@@ -428,20 +415,20 @@ export default {
         "rules": []
       },
       sourceList: [],
+      ruleList: [],
       // 查询参数
       queryParams: {
         pageNum: 1,
         pageSize: 10,
+        id: undefined,
         name: undefined,
-        format: undefined
       },
       // 列信息
       columns: [
-        {key: 0, label: `数据源id`, visible: true},
-        {key: 1, label: `名称`, visible: true},
-        {key: 2, label: `格式`, visible: true},
-        {key: 3, label: `状态`, visible: true},
-        {key: 4, label: `创建时间`, visible: true}
+        {key: 0, label: `模型id`, visible: true},
+        {key: 1, label: `模型名称`, visible: true},
+        {key: 2, label: `状态`, visible: true},
+        {key: 3, label: `创建时间`, visible: true}
       ],
       // 表单校验
       rules: {},
@@ -530,14 +517,24 @@ export default {
   watch: {},
   created() {
     this.getSourceList();
+    this.getRuleList();
   },
   methods: {
-    /** 查询列表 */
+    /** 查询规则 */
+    getRuleList() {
+      this.loading = true;
+      listRule(this.addDateRange(this.queryParams, this.dateRange)).then(response => {
+          this.ruleList = response.rows;
+          this.total = response.total;
+          this.loading = false;
+        }
+      );
+    },
+    /** 查询模型列表 */
     getSourceList() {
       this.loading = true;
       listSource(this.addDateRange(this.queryParams, this.dateRange)).then(response => {
           this.sourceList = response.rows;
-          this.total = response.total;
           this.loading = false;
         }
       );
@@ -566,7 +563,7 @@ export default {
     /** 搜索按钮操作 */
     handleQuery() {
       this.queryParams.pageNum = 1;
-      this.getSourceList();
+      this.getRuleList();
     },
     /** 重置按钮操作 */
     resetQuery() {
