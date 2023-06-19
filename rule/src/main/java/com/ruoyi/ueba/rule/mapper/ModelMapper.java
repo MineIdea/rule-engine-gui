@@ -10,7 +10,7 @@ import java.util.List;
 public interface ModelMapper {
     public List<Model> selectModels(Model model);
 
-    public int updateModels(Model model);
+    public int updateModel(Model model);
 
     public int insertModel(Model model);
 }

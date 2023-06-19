@@ -8,7 +8,7 @@ export function listRule(query) {
   })
 }
 
-export function changeRuleStatus(id, active) {
+export function changeModelStatus(id, active) {
   const data = {
     id: id,
     active: active

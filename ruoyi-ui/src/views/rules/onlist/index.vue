@@ -38,7 +38,7 @@
               icon="el-icon-plus"
               size="mini"
               @click="handleAdd"
-              v-hasPermi="['rule:source:add']"
+              v-hasPermi="['rule:model:add']"
             >新增
             </el-button>
           </el-col>
@@ -50,7 +50,7 @@
               size="mini"
               :disabled="multiple"
               @click="handleDelete"
-              v-hasPermi="['rule:source:remove']"
+              v-hasPermi="['rule:model:remove']"
             >删除
             </el-button>
           </el-col>
@@ -315,34 +315,48 @@
         size="default"
         border
       >
-        <el-descriptions-item label="数据源名称">
+        <el-descriptions-item label="模型名称">
           {{ sourceDetail.name }}
         </el-descriptions-item>
-        <el-descriptions-item label="数据源描述">
+        <el-descriptions-item label="模型描述">
           {{ sourceDetail.data.desc }}
         </el-descriptions-item>
-        <el-descriptions-item label="数据源格式">
-          {{ sourceDetail.format }}
-        </el-descriptions-item>
-        <el-descriptions-item label="数据源类型">
+        <el-descriptions-item label="模型类型">
           {{ sourceDetail.data.type }}
         </el-descriptions-item>
-        <el-descriptions-item label="订阅topic">
-          {{ sourceDetail.data.topic }}
-        </el-descriptions-item>
-        <el-descriptions-item label="时间属性字段">
-          {{ sourceDetail.data.event_time_field }}
-        </el-descriptions-item>
-        <template v-for="(item, index) in sourceDetail.data.fields">
-          <el-descriptions-item :label="'字段'+index">
+        <template v-for="(item, index) in sourceDetail.data.rules">
+          <el-descriptions-item :label="'规则'+index">
             <el-descriptions
               class="margin-top"
               :column="1"
               size="default"
               border
             >
-              <el-descriptions-item label="字段名称">{{ item.name }}</el-descriptions-item>
-              <el-descriptions-item label="字段类型">{{ item.data_type }}</el-descriptions-item>
+              <el-descriptions-item label="规则名称">{{ item.name }}</el-descriptions-item>
+              <el-descriptions-item label="规则描述">{{ item.desc }}</el-descriptions-item>
+              <el-descriptions-item label="规则类型">{{ item.type }}</el-descriptions-item>
+              <el-descriptions-item label="规则数据源">{{ item.source }}</el-descriptions-item>
+              <el-descriptions-item label="过滤条件">
+                <el-descriptions
+                  class="margin-top"
+                  :column="1"
+                  size="default"
+                  border
+                >
+                  <template v-for="(filter, filterIndex) in item.filters">
+                    <el-descriptions-item label="过滤器id">{{ filter.fid }}</el-descriptions-item>
+                    <el-descriptions-item label="过滤器字段">{{ filter.name }}</el-descriptions-item>
+                    <el-descriptions-item label="过滤器操作符">{{ filter.op }}</el-descriptions-item>
+                    <el-descriptions-item v-if="!!filter.value" label="操作值">{{ filter.value }}</el-descriptions-item>
+                  </template>
+                </el-descriptions>
+              </el-descriptions-item>
+              <el-descriptions-item label="过滤器条件模式组合">
+                <template v-for="(pattern, patternIndex) in item.filter_patterns">
+                  <div>{{pattern}}</div>
+                </template>
+              </el-descriptions-item>
+
             </el-descriptions>
           </el-descriptions-item>
         </template>
@@ -380,7 +394,7 @@
 
 <script>
 import {listSource, changeSourceStatus, updateSource, addSource,} from "@/api/rules/source"
-import {listRule, changeRuleStatus, updateRule, addRule} from "@/api/rules/rule"
+import {listRule, changeModelStatus, updateRule, addRule} from "@/api/rules/rule"
 import {getToken} from "@/utils/auth";
 import Treeselect from "@riophae/vue-treeselect";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
@@ -543,11 +557,11 @@ export default {
     handleStatusChange(row) {
       let text = row.active === true ? "启用" : "停用";
       this.$modal.confirm('确认要"' + text + '""' + row.name + '"数据源吗？').then(function () {
-        return changeSourceStatus(row.id, row.active);
+        return changeModelStatus(row.id, row.active);
       }).then(() => {
         this.$modal.msgSuccess(text + "成功");
       }).catch(function () {
-        row.status = row.status === "0" ? "1" : "0";
+        row.active = row.active === "0" ? "1" : "0";
       });
     },
     // 取消按钮
@@ -580,12 +594,11 @@ export default {
     },
     showDetail(row) {
       this.reset();
-      this.title = "数据源详情";
+      this.title = "模型详情";
       this.detailOpen = true;
       this.sourceDetail = {}
       this.sourceDetail["id"] = row.id;
       this.sourceDetail["name"] = row.name;
-      this.sourceDetail["format"] = row.format;
       this.sourceDetail["active"] = row.active;
       this.sourceDetail["data"] = row.data;
     },

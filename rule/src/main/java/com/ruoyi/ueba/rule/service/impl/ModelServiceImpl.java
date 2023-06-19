@@ -24,7 +24,7 @@ public class ModelServiceImpl implements IModelService {
 
     @Override
     public int changeStatus(Model model) {
-        return modelMapper.updateModels(model);
+        return modelMapper.updateModel(model);
     }
 
     @Override
@@ -34,6 +34,6 @@ public class ModelServiceImpl implements IModelService {
 
     @Override
     public int updateModel(Model model) {
-        return modelMapper.updateModels(model);
+        return modelMapper.updateModel(model);
     }
 }
