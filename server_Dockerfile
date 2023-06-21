@@ -1,0 +1,5 @@
+FROM openjdk:17
+COPY ./ruoyi-admin/target/ruoyi-admin.jar ruoyi-admin.jar
+COPY ry.sh ry.sh
+EXPOSE 8088
+CMD ["sh", "ry.sh", "start"]

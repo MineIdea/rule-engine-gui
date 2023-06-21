@@ -163,6 +163,13 @@
         </el-row>
         <el-row>
           <el-col :span="12">
+            <el-form-item label="server地址" prop="server">
+              <el-input v-model="form.server" placeholder="请输入server" maxlength="30" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
             <el-form-item label="订阅topic" prop="topic">
               <el-input v-model="form.topic" placeholder="请输入订阅topic" maxlength="30" />
             </el-form-item>
@@ -193,10 +200,26 @@
             </template>
           </el-scrollbar>
         </template>
-
         <el-row>
           <el-button type="primary" @click="addFields">添加字段</el-button>
         </el-row>
+
+        <template v-if="form.fields && form.fields.length>0">
+          <el-row>
+            <el-col :span="12">
+              <el-form-item label="时间字段" prop="event_time_field">
+                <el-select v-model="form.event_time_field" placeholder="时间字段">
+                  <el-option
+                    v-for="item in form.fields.filter(e=>e.data_type==='long')"
+                    :key="item.name"
+                    :label="item.name"
+                    :value="item.name">
+                  </el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+          </el-row>
+        </template>
 
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -205,7 +228,7 @@
       </div>
     </el-dialog>
 
-    <!-- 添加或修改数据源对话框 -->
+    <!-- 数据源数据源对话框 -->
     <el-dialog :title="title" :visible.sync="detailOpen" width="600px" append-to-body>
       <el-descriptions
         class="margin-top"
@@ -224,6 +247,9 @@
         </el-descriptions-item>
         <el-descriptions-item label="数据源类型">
           {{sourceDetail.data.type}}
+        </el-descriptions-item>
+        <el-descriptions-item label="server地址">
+          {{sourceDetail.data.server}}
         </el-descriptions-item>
         <el-descriptions-item label="订阅topic">
           {{sourceDetail.data.topic}}
@@ -404,6 +430,7 @@ export default {
           this.sourceList = response.rows;
           this.total = response.total;
           this.loading = false;
+          this.changeWord();
         }
       );
     },
@@ -504,6 +531,8 @@ export default {
             data["type"] = this.form.type;
             data["topic"] = this.form.topic
             data["fields"] = this.form.fields;
+            data["server"] = this.form.server;
+            data["event_time_field"] = this.form.event_time_field;
             this.form.data = data
             addSource(this.form).then(response => {
               this.$modal.msgSuccess("新增成功");

@@ -129,3 +129,15 @@ xss:
   excludes: /system/notice
   # 匹配链接
   urlPatterns: /system/*,/monitor/*,/tool/*
+
+hot-swapping:
+  topic: ueba_model_broadcast
+  groupId: ueba_model_broadcast
+  bootstrapServers: 172.21.40.107:9092,172.21.40.125:9092,172.21.40.106:9092
+
+flink:
+  server: 127.0.0.1
+  port: 9081
+  jarFile: /Users/liutao21/Desktop/Project/ueba/engine/target/engine-1.0.jar
+  entryClass: com.chj.xdata.engine.Main
+  configTemplate: '{"engine":{"runMode":"default"},"model":{"type":"empty","path":""},"source":{"type":"string","path":"","params":{"source":"%s"}},"sink":{"type":"kafka","topic":"ueba_rule_alert","server":"%s"},"hot_swapping": %s}'
