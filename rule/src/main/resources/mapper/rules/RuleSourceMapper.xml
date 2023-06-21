@@ -45,4 +45,11 @@
             now()
         )
     </insert>
+
+    <delete id="delSource" parameterType="Integer">
+        delete from rule_source where id in
+            <foreach collection="array" item="id" open="(" separator="," close=")">
+                #{id}
+            </foreach>
+    </delete>
 </mapper>

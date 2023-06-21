@@ -36,4 +36,9 @@ public class RuleSourceServiceImpl implements IRuleSourceService {
     public boolean updateSource(RuleSource ruleSource) {
         return ruleSourceMapper.updateSource(ruleSource) > 0;
     }
+
+    @Override
+    public boolean delSource(Integer[] sourceIds) {
+        return ruleSourceMapper.delSource(sourceIds) > 0;
+    }
 }

@@ -5,7 +5,6 @@ import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.ueba.rule.entity.RuleSource;
 import com.ruoyi.ueba.rule.service.IRuleSourceService;
-import com.ruoyi.web.controller.common.CommonController;
 import com.ruoyi.web.controller.tool.Utils;
 import com.ruoyi.web.core.config.FlinkConfig;
 import com.ruoyi.web.core.config.HotSwappingConfig;
@@ -70,6 +69,11 @@ public class RuleSourceController extends BaseController {
     @PutMapping("/update")
     public AjaxResult updateSource(@RequestBody RuleSource ruleSource) {
         return toAjax(ruleSourceService.updateSource(ruleSource));
+    }
+
+    @DeleteMapping("/{sourceIds}")
+    public AjaxResult delSource(@PathVariable Integer[] sourceIds) {
+        return toAjax(ruleSourceService.delSource(sourceIds));
     }
 
     @Autowired

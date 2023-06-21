@@ -13,4 +13,6 @@ public interface RuleSourceMapper {
     public int updateSource(RuleSource ruleSource);
 
     public int insertSource(RuleSource ruleSource);
+
+    public int delSource(Integer[] sourceIds);
 }

@@ -300,7 +300,7 @@
 </style>
 
 <script>
-import {listSource, changeSourceStatus, updateSource, addSource} from "@/api/rules/source"
+import {listSource, changeSourceStatus, updateSource, addSource, delSource} from "@/api/rules/source"
 import { getToken } from "@/utils/auth";
 import Treeselect from "@riophae/vue-treeselect";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
@@ -470,7 +470,7 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.userId);
+      this.ids = selection.map(item => item.id);
       this.single = selection.length !== 1;
       this.multiple = !selection.length;
     },
@@ -545,9 +545,9 @@ export default {
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      const userIds = row.userId || this.ids;
-      this.$modal.confirm('是否确认删除用户编号为"' + userIds + '"的数据项？').then(function() {
-        return delSource(userIds);
+      const sourceIds = row.id || this.ids;
+      this.$modal.confirm('是否确认删除数据源编号为"' + sourceIds + '"的数据项？').then(function() {
+        return delSource(sourceIds);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");

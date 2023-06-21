@@ -35,3 +35,10 @@ export function addSource(data) {
     data: data
   })
 }
+
+export function delSource(sourceId) {
+  return request({
+    url: 'rules/source/' + sourceId,
+    method: 'delete'
+  })
+}

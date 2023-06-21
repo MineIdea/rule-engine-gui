@@ -15,4 +15,6 @@ public interface IRuleSourceService {
     public boolean addSource(RuleSource ruleSource);
 
     public boolean updateSource(RuleSource ruleSource);
+
+    public boolean delSource(Integer[] sourceIds);
 }
