@@ -175,8 +175,8 @@
                 <el-scrollbar height="400px">
                   <el-row :span="24">
                     <el-col :span="12">
-                      <el-form-item label="字段">
-                        <el-input v-model="newRule.name" placeholder="字段名称" @input="changeWord"/>
+                      <el-form-item label="规则名称">
+                        <el-input v-model="newRule.name" placeholder="规则名称" @input="changeWord"/>
                       </el-form-item>
                     </el-col>
                   </el-row>
