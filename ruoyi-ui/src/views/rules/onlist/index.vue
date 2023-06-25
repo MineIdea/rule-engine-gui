@@ -215,7 +215,7 @@
                       </el-form-item>
                     </el-col>
                   </el-row>
-                  <template v-if="newRule.filters != null && newRule.filters.length>0">
+                  <template v-if="newRule.filters && newRule.filters.length>0">
                     <el-scrollbar height="400px">
                       <template v-for="(filterItem, filterIndex) in newRule.filters">
                         <el-row>
@@ -262,7 +262,7 @@
                       </template>
                     </el-scrollbar>
                   </template>
-                  <template v-if="newRule.source !== undefined && newRule.source !== ''">
+                  <template v-if="newRule.source && newRule.source !== ''">
                     <el-row  style="margin-bottom: 10px">
                       <el-button type="primary" @click="addFilter(newRule)">添加过滤条件</el-button>
                     </el-row>
@@ -446,7 +446,7 @@ export default {
       ],
       // 表单校验
       rules: {},
-      fieldList: ["name", "format", "desc", "type", "topic", "fields"],
+      fieldList: ["name", "format", "desc", "type", "topic", "risk_level", "rules"],
       sourceDetail: {
         data: {}
       },
@@ -608,27 +608,28 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-
-      // getSource().then(response => {
-      //   this.postOptions = response.posts;
-      //   this.roleOptions = response.roles;
-      //   this.title = "添加用户";
-      //   this.form.password = this.initPassword;
-      // });
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
       this.open = true;
-      this.title = "修改数据源";
-      const data = this.sourceList.find(item => item.id === row.id).data;
+      this.title = "修改模型";
+      const data = this.ruleList.find(item => item.id === row.id).data;
 
       this.form.id = row.id
-      this.fieldsCount = this.form.fields.length || 0
-
       for (let i = 0; i < this.fieldList.length; i++) {
         this.form[this.fieldList[i]] = data[this.fieldList[i]]
       }
+      for (let i = 0; i < this.form.rules.length; i++) {
+        let rule = this.form.rules[i];
+        this.handleSelectedSource(rule)
+        for (let j = 0; j < rule.filters.length; j++) {
+          let filter = rule.filters[j];
+          this.handlerFilterName(filter, rule);
+        }
+      }
+      this.fieldsCount = this.form.rules.length || 0
+      console.log(this.form)
     },
     /** 提交按钮 */
     submitForm: function () {
@@ -703,7 +704,10 @@ export default {
       if (data_type !== 'object') {
         Object.keys(this.function_info.scalar.object).forEach(e=>res.push(e))
       }
-      Object.keys(this.function_info.scalar[data_type]).forEach(e=>res.push(e))
+      let scalarElement = this.function_info.scalar[data_type];
+      if (scalarElement) {
+        Object.keys(scalarElement).forEach(e=>res.push(e))
+      }
       return res.sort()
     },
     needOpValue(filter) {

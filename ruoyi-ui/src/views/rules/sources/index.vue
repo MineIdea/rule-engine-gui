@@ -515,7 +515,7 @@ export default {
     submitForm: function() {
       this.$refs["form"].validate(valid => {
         if (valid) {
-          if (this.form.id != undefined) {
+          if (this.form.id !== undefined) {
             updateSource(this.form).then(response => {
               this.$modal.msgSuccess("修改成功");
               this.open = false;
