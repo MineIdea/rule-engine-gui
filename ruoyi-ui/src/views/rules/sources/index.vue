@@ -357,6 +357,7 @@ export default {
 
         }
       },
+      fieldList: ["name", "format", "desc", "type", "topic", "fields", "server", "event_time_field"],
       sourceFormats: [
         {
           "label": "log",
@@ -503,14 +504,11 @@ export default {
       this.reset();
       this.open = true;
       this.title = "修改数据源";
-      var data = this.sourceList.find(item => item.id === row.id).data;
-      this.form.name = data.name
-      this.form.format = data.format
-      this.form.desc = data.desc
-      this.form.type = data.type
-      this.form.topic = data.topic
-      this.form.fields = data.fields
+      const data = this.sourceList.find(item => item.id === row.id).data;
       this.form.id = row.id
+      for (let i = 0; i < this.fieldList.length; i++) {
+        this.form[this.fieldList[i]] = data[this.fieldList[i]]
+      }
       this.fieldsCount = this.form.fields.length
     },
     /** 提交按钮 */
@@ -525,14 +523,9 @@ export default {
             });
           } else {
             var data = {}
-            data["name"] = this.form.name;
-            data["format"] = this.form.format;
-            data["desc"] = this.form.desc;
-            data["type"] = this.form.type;
-            data["topic"] = this.form.topic
-            data["fields"] = this.form.fields;
-            data["server"] = this.form.server;
-            data["event_time_field"] = this.form.event_time_field;
+            for (let i = 0; i < this.fieldList.length; i++) {
+              data[this.fieldList[i]] = this.form[this.fieldList[i]]
+            }
             this.form.data = data
             addSource(this.form).then(response => {
               this.$modal.msgSuccess("新增成功");

@@ -446,6 +446,7 @@ export default {
       ],
       // 表单校验
       rules: {},
+      fieldList: ["name", "format", "desc", "type", "topic", "fields"],
       sourceDetail: {
         data: {}
       },
@@ -620,15 +621,14 @@ export default {
       this.reset();
       this.open = true;
       this.title = "修改数据源";
-      var data = this.sourceList.find(item => item.id === row.id).data;
-      this.form.name = data.name
-      this.form.format = data.format
-      this.form.desc = data.desc
-      this.form.type = data.type
-      this.form.topic = data.topic
-      this.form.fields = data.fields
+      const data = this.sourceList.find(item => item.id === row.id).data;
+
       this.form.id = row.id
       this.fieldsCount = this.form.fields.length || 0
+
+      for (let i = 0; i < this.fieldList.length; i++) {
+        this.form[this.fieldList[i]] = data[this.fieldList[i]]
+      }
     },
     /** 提交按钮 */
     submitForm: function () {
@@ -642,12 +642,11 @@ export default {
             });
           } else {
             var data = {}
-            data["name"] = this.form.name;
-            data["format"] = this.form.format;
-            data["desc"] = this.form.desc;
-            data["type"] = this.form.type;
-            data["topic"] = this.form.topic
-            data["fields"] = this.form.fields;
+
+            for (let i = 0; i < this.fieldList.length; i++) {
+              data[this.fieldList[i]] = this.form[this.fieldList[i]]
+            }
+
             this.form.data = data
             addSource(this.form).then(response => {
               this.$modal.msgSuccess("新增成功");
