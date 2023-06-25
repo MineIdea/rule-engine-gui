@@ -229,7 +229,7 @@
                           </el-form-item>
                           <el-col>
                             <el-form-item label="字段">
-                              <el-select v-model="filterItem.name" @input="handlerFilterName(filterItem, newRule)">
+                              <el-select v-model="filterItem.name" @input="handlerFilterName(filterItem, newRule)" @focus="printDebug">
                                 <el-option
                                   v-for="item in newRule.selectedSource.data.fields"
                                   :key="item.name"
@@ -241,7 +241,7 @@
                           <template v-if="filterItem.name != null && filterItem.name !== ''">
                             <el-col>
                               <el-form-item label="操作符">
-                                <el-select v-model="filterItem.op" @input="changeWord">
+                                <el-select v-model="filterItem.op" @input="changeWord" @change="changeWord" clearable>
                                   <el-option
                                     v-for="item in getScalarOp(filterItem.data_type)"
                                     :key="item"
@@ -251,12 +251,12 @@
                               </el-form-item>
                             </el-col>
                           </template>
-                          <template v-if="filterItem.op != null && filterItem.op !== '' && needOpValue(filterItem)">
-                            <el-form-item label="值">
-                              <el-col :span="10">
-                              <el-input v-model="filterItem.value" placeholder="值" @input="changeWord"/>
+                          <template v-if="filterItem.op && filterItem.op !== '' && needOpValue(filterItem)">
+                              <el-col :span="12">
+                                <el-form-item label="值">
+                                  <el-input v-model="filterItem.value" placeholder="值" @input="changeWord"/>
+                                </el-form-item>
                               </el-col>
-                            </el-form-item>
                           </template>
                         </el-row>
                       </template>
@@ -569,6 +569,7 @@ export default {
     cancel() {
       this.open = false;
       this.reset();
+      this.getRuleList();
     },
     // 表单重置
     reset() {
@@ -629,7 +630,6 @@ export default {
         }
       }
       this.fieldsCount = this.form.rules.length || 0
-      console.log(this.form)
     },
     /** 提交按钮 */
     submitForm: function () {
@@ -688,7 +688,8 @@ export default {
       if (!rule.filters) {
         rule.filters = []
       }
-      rule.filters.push({fid: rule.filters.length})
+      let fid = rule.filters && rule.filters.length>0 ? Math.max.apply(Math, rule.filters.map(e=>e.fid)) + 1 : 0
+      rule.filters.push({fid: fid})
       this.changeWord()
     },
     handlerFilterName(filter, rule) {
@@ -719,6 +720,9 @@ export default {
         return false;
       }
       return true;
+    },
+    printDebug(row) {
+      console.log("debug row", row)
     }
   }
 }
