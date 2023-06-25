@@ -19,6 +19,7 @@ public class ModelController extends BaseController {
     @Autowired
     private IModelService ruleService;
 
+
     @GetMapping("/list")
     public TableDataInfo listModels(Model model) {
         startPage();

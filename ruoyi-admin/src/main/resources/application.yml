@@ -133,7 +133,7 @@ xss:
 hot-swapping:
   topic: ueba_model_broadcast
   groupId: ueba_model_broadcast
-  bootstrapServers: 172.21.40.107:9092,172.21.40.125:9092,172.21.40.106:9092
+  bootstrapServers: 127.0.0.1:9094
 
 flink:
   server: 127.0.0.1

@@ -1,10 +1,15 @@
-package com.ruoyi.web.core.config;
+package com.ruoyi.common.config;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.apache.kafka.clients.producer.KafkaProducer;
+import org.apache.kafka.clients.producer.Producer;
+import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
 import java.util.Objects;
+import java.util.Properties;
 
 /**
  * @author liutao
@@ -41,6 +46,18 @@ public class HotSwappingConfig {
 
     public void setTopic(String topic) {
         this.topic = topic;
+    }
+
+    @Bean
+    public KafkaProducer<String, String> getHotSwappingKafkaProducer() {
+        Properties props = new Properties();
+        //设置Kafka服务器地址
+        props.put("bootstrap.servers", bootstrapServers);
+        //设置数据key的序列化处理类
+        props.put("key.serializer", StringSerializer.class.getName());
+        //设置数据value的序列化处理类
+        props.put("value.serializer", StringSerializer.class.getName());
+        return new KafkaProducer<>(props);
     }
 
     @Override
