@@ -635,24 +635,24 @@ export default {
     submitForm: function () {
       this.$refs["form"].validate(valid => {
         if (valid) {
-          if (this.form.id != undefined) {
-            updateSource(this.form).then(response => {
+          if (this.form.id) {
+            updateRule(this.form).then(response => {
               this.$modal.msgSuccess("修改成功");
               this.open = false;
-              this.getSourceList();
+              this.getRuleList();
             });
           } else {
-            var data = {}
+            const data = {};
 
             for (let i = 0; i < this.fieldList.length; i++) {
               data[this.fieldList[i]] = this.form[this.fieldList[i]]
             }
 
             this.form.data = data
-            addSource(this.form).then(response => {
+            updateRule(this.form).then(response => {
               this.$modal.msgSuccess("新增成功");
               this.open = false;
-              this.getSourceList();
+              this.getRuleList();
             });
           }
         }
