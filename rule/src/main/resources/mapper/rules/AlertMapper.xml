@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.ueba.rule.mapper.AlertMapper">
+
+    <resultMap type="Alert" id="AlertResult">
+        <id     property="id"       column="id"      />
+        <result property="uuId"       column="uuId"      />
+        <result property="name"       column="name"      />
+        <result property="desc"     column="desc"    />
+        <result property="createTime"     column="create_time"    />
+        <result property="data"        column="data" javaType="java.util.Map"  typeHandler="com.ruoyi.ueba.rule.mapper.handler.JsonTypeHandler"      />
+    </resultMap>
+
+    <select id="selectAlerts" parameterType="Alert" resultMap="AlertResult">
+        select id, uuId, name, `desc`, create_time, data from rule_alert where 1=1
+        <if test="uuId != null and uuId !=''">
+            AND uuId=#{uuId}
+        </if>
+        <if test="name != null and name != ''">
+            AND name like concat('%', #{name}, '%')
+        </if>
+        <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
+            AND date_format(u.create_time,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
+        </if>
+        <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
+            AND date_format(u.create_time,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+        </if>
+    </select>
+
+</mapper>

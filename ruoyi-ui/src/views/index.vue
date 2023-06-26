@@ -4,16 +4,24 @@
       <!--用户数据-->
       <el-col :span="24" :xs="24">
         <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="90px">
-          <el-form-item label="数据源名称" prop="name">
+          <el-form-item label="uuId" prop="uuId">
             <el-input
-              v-model="queryParams.name"
-              placeholder="请输入数据源名称"
+              v-model="queryParams.uuId"
+              placeholder="请输入告警uuId"
               clearable
               style="width: 240px"
               @keyup.enter.native="handleQuery"
             />
           </el-form-item>
-
+          <el-form-item label="告警名称" prop="name">
+            <el-input
+              v-model="queryParams.name"
+              placeholder="请输入告警名称"
+              clearable
+              style="width: 240px"
+              @keyup.enter.native="handleQuery"
+            />
+          </el-form-item>
           <el-form-item label="创建时间">
             <el-date-picker
               v-model="dateRange"
@@ -33,55 +41,15 @@
         </el-form>
 
         <el-row :gutter="10" class="mb8">
-          <el-col :span="1.5">
-            <el-button
-              type="primary"
-              plain
-              icon="el-icon-plus"
-              size="mini"
-              @click="handleAdd"
-              v-hasPermi="['rule:source:add']"
-            >新增</el-button>
-          </el-col>
-          <el-col :span="1.5">
-            <el-button
-              type="success"
-              plain
-              icon="el-icon-edit"
-              size="mini"
-              :disabled="single"
-              @click="handleUpdate"
-              v-hasPermi="['rule:source:edit']"
-            >修改</el-button>
-          </el-col>
-          <el-col :span="1.5">
-            <el-button
-              type="danger"
-              plain
-              icon="el-icon-delete"
-              size="mini"
-              :disabled="multiple"
-              @click="handleDelete"
-              v-hasPermi="['rule:source:remove']"
-            >删除</el-button>
-          </el-col>
           <right-toolbar :showSearch.sync="showSearch" @queryTable="getList" :columns="columns"></right-toolbar>
         </el-row>
 
         <el-table v-loading="loading" :data="sourceList" @selection-change="handleSelectionChange">
           <el-table-column type="selection" width="50" align="center" />
-          <el-table-column label="数据源id" align="center" key="id" prop="id" v-if="columns[0].visible" />
+          <el-table-column label="uuId" align="center" key="uuId" prop="uuId" v-if="columns[0].visible" />
           <el-table-column label="名称" align="center" key="name" prop="name" v-if="columns[1].visible" :show-overflow-tooltip="true" />
-          <el-table-column label="格式" align="center" key="format" prop="format" v-if="columns[2].visible" :show-overflow-tooltip="true" />
-          <el-table-column label="状态" align="center" key="status" v-if="columns[3].visible">
-            <template slot-scope="scope">
-              <el-switch
-                v-model="scope.row.active"
-                @change="handleStatusChange(scope.row)"
-              ></el-switch>
-            </template>
-          </el-table-column>
-          <el-table-column label="创建时间" align="center" prop="createTime" v-if="columns[4].visible" width="160">
+          <el-table-column label="描述" align="center" key="desc" prop="desc" v-if="columns[2].visible" :show-overflow-tooltip="true" />
+          <el-table-column label="创建时间" align="center" prop="createTime" v-if="columns[3].visible" width="160">
             <template slot-scope="scope">
               <span>{{ parseTime(scope.row.createTime) }}</span>
             </template>
@@ -100,13 +68,6 @@
                 @click="showDetail(scope.row)"
                 v-hasPermi="['rule:source:list']"
               >详情</el-button>
-              <el-button
-                size="mini"
-                type="text"
-                icon="el-icon-edit"
-                @click="handleUpdate(scope.row)"
-                v-hasPermi="['rule:source:edit']"
-              >修改</el-button>
               <el-button
                 size="mini"
                 type="text"
@@ -312,7 +273,7 @@
 </style>
 
 <script>
-import {listSource, changeSourceStatus, updateSource, addSource, delSource} from "@/api/rules/source"
+import {listAlert} from "@/api/rules/alert"
 import { getToken } from "@/utils/auth";
 import Treeselect from "@riophae/vue-treeselect";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
@@ -352,16 +313,15 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        name: undefined,
-        format: undefined
+        uuId: undefined,
+        name: undefined
       },
       // 列信息
       columns: [
-        { key: 0, label: `数据源id`, visible: true },
+        { key: 0, label: `uuId`, visible: true },
         { key: 1, label: `名称`, visible: true },
-        { key: 2, label: `格式`, visible: true },
-        { key: 3, label: `状态`, visible: true },
-        { key: 4, label: `创建时间`, visible: true }
+        { key: 2, label: `描述`, visible: true },
+        { key: 3, label: `创建时间`, visible: true }
       ],
       // 表单校验
       rules: {
@@ -440,7 +400,7 @@ export default {
     /** 查询列表 */
     getList() {
       this.loading = true;
-      listSource(this.addDateRange(this.queryParams, this.dateRange)).then(response => {
+      listAlert(this.addDateRange(this.queryParams, this.dateRange)).then(response => {
           this.sourceList = response.rows;
           this.total = response.total;
           this.loading = false;

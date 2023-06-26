@@ -20,5 +20,6 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
     <typeAliases>
         <typeAlias type="com.ruoyi.ueba.rule.entity.RuleSource" alias="RuleSource"/>
         <typeAlias type="com.ruoyi.ueba.rule.entity.Model" alias="Model"/>
+        <typeAlias type="com.ruoyi.ueba.rule.entity.Alert" alias="Alert"/>
     </typeAliases>
 </configuration>
