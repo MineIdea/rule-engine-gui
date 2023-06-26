@@ -29,4 +29,15 @@
         </if>
     </select>
 
+    <insert id="insertAlert" parameterType="Alert">
+        insert into rule_alert
+            (uuId, name, `desc`, data, create_time) values
+        (
+            #{uuId},
+            #{name},
+            #{desc},
+            #{data,typeHandler=com.ruoyi.ueba.rule.mapper.handler.JsonTypeHandler},
+            now()
+        )
+    </insert>
 </mapper>
