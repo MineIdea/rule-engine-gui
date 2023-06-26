@@ -229,7 +229,7 @@
                           </el-form-item>
                           <el-col>
                             <el-form-item label="字段">
-                              <el-select v-model="filterItem.name" @input="handlerFilterName(filterItem, newRule)" @focus="printDebug">
+                              <el-select v-model="filterItem.name" @input="handlerFilterName(filterItem, newRule)">
                                 <el-option
                                   v-for="item in newRule.selectedSource.data.fields"
                                   :key="item.name"
@@ -635,6 +635,14 @@ export default {
     submitForm: function () {
       this.$refs["form"].validate(valid => {
         if (valid) {
+          const data = {};
+
+          for (let i = 0; i < this.fieldList.length; i++) {
+            data[this.fieldList[i]] = this.form[this.fieldList[i]]
+          }
+
+          this.form.data = data
+
           if (this.form.id) {
             updateRule(this.form).then(response => {
               this.$modal.msgSuccess("修改成功");
@@ -642,14 +650,7 @@ export default {
               this.getRuleList();
             });
           } else {
-            const data = {};
-
-            for (let i = 0; i < this.fieldList.length; i++) {
-              data[this.fieldList[i]] = this.form[this.fieldList[i]]
-            }
-
-            this.form.data = data
-            updateRule(this.form).then(response => {
+            addRule(this.form).then(response => {
               this.$modal.msgSuccess("新增成功");
               this.open = false;
               this.getRuleList();
