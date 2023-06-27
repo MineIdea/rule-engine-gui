@@ -35,3 +35,11 @@ export function addRule(data) {
     data: data
   })
 }
+
+export function delRule(sourceId) {
+  return request({
+    url: 'rules/model/' + sourceId,
+    method: 'delete'
+  })
+}
+

@@ -13,4 +13,6 @@ public interface IModelService {
     int addModel(Model model);
 
     int updateModel(Model model);
+
+    int delModel(Integer[] modelIds);
 }

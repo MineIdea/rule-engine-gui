@@ -41,4 +41,9 @@ public class ModelController extends BaseController {
     public AjaxResult updateModel(@RequestBody Model model) {
         return toAjax(ruleService.updateModel(model));
     }
+
+    @DeleteMapping("/{modelIds}")
+    public AjaxResult delSource(@PathVariable Integer[] modelIds) {
+        return toAjax(ruleService.delModel(modelIds));
+    }
 }

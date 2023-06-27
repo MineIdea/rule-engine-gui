@@ -394,7 +394,7 @@
 
 <script>
 import {listSource, changeSourceStatus, updateSource, addSource,} from "@/api/rules/source"
-import {listRule, changeModelStatus, updateRule, addRule} from "@/api/rules/rule"
+import {listRule, changeModelStatus, updateRule, addRule, delRule} from "@/api/rules/rule"
 import {getToken} from "@/utils/auth";
 import Treeselect from "@riophae/vue-treeselect";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
@@ -661,11 +661,11 @@ export default {
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      const userIds = row.userId || this.ids;
-      this.$modal.confirm('是否确认删除用户编号为"' + userIds + '"的数据项？').then(function () {
-        return delSource(userIds);
+      const ids = row.id || this.ids;
+      this.$modal.confirm('是否确认删除编号为"' + ids + '"的模型？').then(function () {
+        return delRule(ids);
       }).then(() => {
-        this.getSourceList();
+        this.getRuleList();
         this.$modal.msgSuccess("删除成功");
       }).catch(() => {
       });

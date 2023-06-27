@@ -13,4 +13,6 @@ public interface ModelMapper {
     public int updateModel(Model model);
 
     public int insertModel(Model model);
+
+    public int delModels(Integer[] modelIds);
 }

@@ -51,6 +51,17 @@ public class ModelServiceImpl implements IModelService {
         return modelMapper.updateModel(model);
     }
 
+    @Override
+    public int delModel(Integer[] modelIds) {
+        for (Integer modelId : modelIds) {
+            Model model = new Model();
+            model.setId(modelId);
+            Model detail = this.selectModels(model).get(0);
+            this.sendChangeModel(detail.getData(), EventType.delete);
+        }
+        return modelMapper.delModels(modelIds);
+    }
+
     public void sendChangeModel(Map<String, Object> model, EventType eventType) {
         String uuId = UUID.randomUUID().toString();
         Map<String, Object> res = new HashMap<>();
