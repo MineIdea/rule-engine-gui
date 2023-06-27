@@ -1,14 +1,19 @@
 package com.ruoyi.common.config;
 
+import org.apache.flink.client.deployment.StandaloneClusterId;
+import org.apache.flink.client.program.rest.RestClusterClient;
+import org.apache.flink.configuration.Configuration;
+import org.apache.flink.configuration.RestOptions;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Bean;
+import org.springframework.stereotype.Component;
 
 import java.util.Objects;
 
 /**
  * @author liutao
  */
-@Configuration
+@Component
 @ConfigurationProperties(prefix = "flink")
 public class FlinkConfig {
     private String server;
@@ -18,6 +23,19 @@ public class FlinkConfig {
     private String entryClass;
 
     private String configTemplate;
+
+    @Bean
+    public RestClusterClient<StandaloneClusterId> getRestClusterClient() {
+        Configuration configuration = new Configuration();
+        configuration.setString(RestOptions.ADDRESS, this.getServer());
+        configuration.setInteger(RestOptions.PORT, this.getPort());
+
+        try {
+            return new RestClusterClient<>(configuration, StandaloneClusterId.getInstance());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     public String getServer() {
         return server;

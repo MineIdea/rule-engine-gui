@@ -61,7 +61,7 @@
           <el-table-column label="数据源id" align="center" key="id" prop="id" v-if="columns[0].visible" />
           <el-table-column label="名称" align="center" key="name" prop="name" v-if="columns[1].visible" :show-overflow-tooltip="true" />
           <el-table-column label="格式" align="center" key="format" prop="format" v-if="columns[2].visible" :show-overflow-tooltip="true" />
-          <el-table-column label="状态" align="center" key="status" v-if="columns[3].visible">
+          <el-table-column label="状态" align="center" key="active" v-if="columns[3].visible">
             <template slot-scope="scope">
               <el-switch
                 v-model="scope.row.active"
@@ -69,7 +69,8 @@
               ></el-switch>
             </template>
           </el-table-column>
-          <el-table-column label="创建时间" align="center" prop="createTime" v-if="columns[4].visible" width="160">
+          <el-table-column label="flink任务Id" align="center" key="jobId" prop="jobId" v-if="columns[4].visible" :show-overflow-tooltip="true" />
+          <el-table-column label="创建时间" align="center" prop="createTime" v-if="columns[5].visible" width="160">
             <template slot-scope="scope">
               <span>{{ parseTime(scope.row.createTime) }}</span>
             </template>
@@ -347,7 +348,8 @@ export default {
         { key: 1, label: `名称`, visible: true },
         { key: 2, label: `格式`, visible: true },
         { key: 3, label: `状态`, visible: true },
-        { key: 4, label: `创建时间`, visible: true }
+        { key: 4, label: `flink任务Id`, visible: true },
+        { key: 5, label: `创建时间`, visible: true }
       ],
       // 表单校验
       rules: {
@@ -441,6 +443,7 @@ export default {
       this.$modal.confirm('确认要"' + text + '""' + row.name + '"数据源吗？').then(function() {
         return changeSourceStatus(row.id, row.active);
       }).then(() => {
+        this.getList();
         this.$modal.msgSuccess(text + "成功");
       }).catch(function() {
         row.status = row.status === "0" ? "1" : "0";

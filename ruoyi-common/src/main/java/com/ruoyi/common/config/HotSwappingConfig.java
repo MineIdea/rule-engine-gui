@@ -1,5 +1,6 @@
 package com.ruoyi.common.config;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
@@ -49,6 +50,7 @@ public class HotSwappingConfig {
     }
 
     @Bean
+    @JsonIgnore
     public KafkaProducer<String, String> getHotSwappingKafkaProducer() {
         Properties props = new Properties();
         //设置Kafka服务器地址

@@ -11,7 +11,7 @@ export function listSource(query) {
 export function changeSourceStatus(id, active) {
   const data = {
     id: id,
-    status: active
+    active: active
   }
   return request({
     url: '/rules/source/changeStatus',

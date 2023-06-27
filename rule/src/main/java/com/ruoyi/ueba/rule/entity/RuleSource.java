@@ -18,6 +18,8 @@ public class RuleSource {
     @JsonProperty
     private String format;
     @JsonProperty
+    private String jobId;
+    @JsonProperty
     private Date createTime;
     @JsonProperty
     private Map<String, Object> data;
@@ -82,6 +84,14 @@ public class RuleSource {
 
     public void setActive(Boolean active) {
         this.active = active;
+    }
+
+    public String getJobId() {
+        return jobId;
+    }
+
+    public void setJobId(String jobId) {
+        this.jobId = jobId;
     }
 
     @Override
