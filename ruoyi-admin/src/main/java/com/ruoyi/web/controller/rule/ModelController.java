@@ -46,4 +46,9 @@ public class ModelController extends BaseController {
     public AjaxResult delSource(@PathVariable Integer[] modelIds) {
         return toAjax(ruleService.delModel(modelIds));
     }
+
+    @GetMapping("/maxId")
+    public AjaxResult getMaxModelId() {
+        return AjaxResult.success(ruleService.getMaxModelId());
+    }
 }

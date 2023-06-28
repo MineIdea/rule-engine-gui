@@ -17,9 +17,12 @@ import org.apache.flink.client.program.rest.RestClusterClient;
 import org.apache.flink.configuration.Configuration;
 import org.apache.flink.configuration.RestOptions;
 import org.apache.flink.runtime.jobgraph.JobGraph;
+import org.apache.flink.runtime.messages.FlinkJobNotFoundException;
+import org.apache.flink.shaded.guava30.com.google.common.base.Joiner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.File;
@@ -40,6 +43,8 @@ public class RuleSourceController extends BaseController {
 
     @Autowired
     private FlinkConfig flinkConfig;
+    @Autowired
+    private KafkaProperties kafkaProperties;
     @Autowired
     private HotSwappingConfig hotSwappingConfig;
     @Autowired
@@ -88,6 +93,8 @@ public class RuleSourceController extends BaseController {
                     }
                     ruleSource.setJobId(" ");
                     log.info("cancel job success, job id is {}", ruleSource.getJobId());
+                } else {
+                    ruleSource.setJobId(" ");
                 }
             }
         }
@@ -182,7 +189,7 @@ public class RuleSourceController extends BaseController {
         String configTemplate = this.flinkConfig.getConfigTemplate();
         String config = String.format(configTemplate,
                 dataJson,
-                this.flinkConfig.getServer() + ":" + this.flinkConfig.getPort(),
+                Joiner.on(",").join(kafkaProperties.getBootstrapServers()),
                 Utils.jsonMapper.writeValueAsString(hotSwappingConfig)
         );
 
@@ -204,7 +211,12 @@ public class RuleSourceController extends BaseController {
         if (jobId == null || jobId.isEmpty() || jobId.equals(" ")) {
             return false;
         }
-        JobStatus jobStatus = client.getJobStatus(JobID.fromHexString(jobId)).get();
+        JobStatus jobStatus;
+        try {
+            jobStatus = client.getJobStatus(JobID.fromHexString(jobId)).get();
+        } catch (Exception e) {
+            return false;
+        }
         return jobStatus == JobStatus.INITIALIZING || jobStatus == JobStatus.CREATED || jobStatus == JobStatus.RUNNING;
     }
 

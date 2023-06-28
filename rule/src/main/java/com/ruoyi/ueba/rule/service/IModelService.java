@@ -15,4 +15,6 @@ public interface IModelService {
     int updateModel(Model model);
 
     int delModel(Integer[] modelIds);
+
+    int getMaxModelId();
 }

@@ -12,6 +12,10 @@
         <result property="active" column="active" />
     </resultMap>
 
+    <resultMap id="maxModelId" type="Integer" >
+        <id property="id" column="maxId" />
+    </resultMap>
+
     <select id="selectModels" parameterType="Model" resultMap="ModelResult">
         select id, name, create_time, data, active from rule where del_flag='0'
         <if test="id != null and id != ''">
@@ -34,8 +38,9 @@
 
     <insert id="insertModel" parameterType="Model">
         insert into rule
-            (name, data, create_time) values
+            (id, name, data, create_time) values
         (
+            #{id},
             <if test="name != null and name != ''">#{name},</if>
             <if test="data != null">#{data,typeHandler=com.ruoyi.ueba.rule.mapper.handler.JsonTypeHandler},</if>
             now()
@@ -48,4 +53,8 @@
             #{id}
         </foreach>
     </delete>
+
+    <select id="getMaxModelId" resultMap="maxModelId">
+        select max(id) as maxId from rule
+    </select>
 </mapper>

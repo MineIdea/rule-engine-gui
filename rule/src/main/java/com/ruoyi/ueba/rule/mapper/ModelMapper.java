@@ -15,4 +15,6 @@ public interface ModelMapper {
     public int insertModel(Model model);
 
     public int delModels(Integer[] modelIds);
+
+    public Integer getMaxModelId();
 }

@@ -43,3 +43,10 @@ export function delRule(sourceId) {
   })
 }
 
+export function getMaxModelId() {
+  return request({
+    url: 'rules/model/maxId',
+    method: 'get'
+  })
+}
+

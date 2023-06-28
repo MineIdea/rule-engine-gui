@@ -41,13 +41,13 @@ public class ModelServiceImpl implements IModelService {
 
     @Override
     public int addModel(Model model) {
-        this.sendChangeModel(model.getData(), EventType.add);
+        this.sendChangeModel(model, EventType.add);
         return modelMapper.insertModel(model);
     }
 
     @Override
     public int updateModel(Model model) {
-        this.sendChangeModel(model.getData(), EventType.update);
+        this.sendChangeModel(model, EventType.update);
         return modelMapper.updateModel(model);
     }
 
@@ -57,16 +57,28 @@ public class ModelServiceImpl implements IModelService {
             Model model = new Model();
             model.setId(modelId);
             Model detail = this.selectModels(model).get(0);
-            this.sendChangeModel(detail.getData(), EventType.delete);
+            this.sendChangeModel(detail, EventType.delete);
         }
         return modelMapper.delModels(modelIds);
     }
 
-    public void sendChangeModel(Map<String, Object> model, EventType eventType) {
+    @Override
+    public int getMaxModelId() {
+        Integer maxModelId = modelMapper.getMaxModelId();
+        if (maxModelId == null) {
+            return 0;
+        }
+        return maxModelId;
+    }
+
+    public void sendChangeModel(Model model, EventType eventType) {
         String uuId = UUID.randomUUID().toString();
+        if (model.getId() != null) {
+            model.getData().put("mid", model.getId());
+        }
         Map<String, Object> res = new HashMap<>();
         res.put("type", eventType.toString());
-        res.put("model", model);
+        res.put("model", model.getData());
         try {
             this.hotSwappingProducer.send(new ProducerRecord<>(
                     hotSwappingConfig.getTopic(),

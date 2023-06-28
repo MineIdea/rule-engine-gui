@@ -125,8 +125,15 @@
       <el-form ref="form" :model="form" label-width="90px">
         <el-row>
           <el-col :span="12">
+            <el-form-item label="模型id" prop="id">
+              <el-input v-model="form.id" placeholder="请输入模型id" maxlength="30" disabled/>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
             <el-form-item label="模型名称" prop="name">
-              <el-input v-model="form.name" placeholder="请输入模型名称" maxlength="30"/>
+              <el-input v-model="form.name" placeholder="请输入模型名称" maxlength="30" @input="changeWord"/>
             </el-form-item>
           </el-col>
         </el-row>
@@ -315,6 +322,9 @@
         size="default"
         border
       >
+        <el-descriptions-item label="模型id">
+          {{ sourceDetail.id }}
+        </el-descriptions-item>
         <el-descriptions-item label="模型名称">
           {{ sourceDetail.name }}
         </el-descriptions-item>
@@ -393,8 +403,8 @@
 </style>
 
 <script>
-import {listSource, changeSourceStatus, updateSource, addSource,} from "@/api/rules/source"
-import {listRule, changeModelStatus, updateRule, addRule, delRule} from "@/api/rules/rule"
+import {listSource} from "@/api/rules/source"
+import {listRule, changeModelStatus, updateRule, addRule, delRule, getMaxModelId} from "@/api/rules/rule"
 import {getToken} from "@/utils/auth";
 import Treeselect from "@riophae/vue-treeselect";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
@@ -446,7 +456,7 @@ export default {
       ],
       // 表单校验
       rules: {},
-      fieldList: ["name", "format", "desc", "type", "topic", "risk_level", "rules"],
+      fieldList: ["name", "desc", "type", "risk_level", "rules"],
       sourceDetail: {
         data: {}
       },
@@ -608,12 +618,21 @@ export default {
     /** 新增按钮操作 */
     handleAdd() {
       this.reset();
-      this.open = true;
+      getMaxModelId().then(response => {
+        let maxModelId = response.data;
+        if (maxModelId === null || maxModelId === undefined) {
+          maxModelId = 0;
+        }
+        this.form.id = maxModelId+1;
+        this.form.operator_type='add'
+        this.open = true;
+      }).catch(error => {
+        this.$modal.msgError(error);
+      });
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
-      this.open = true;
       this.title = "修改模型";
       const data = this.ruleList.find(item => item.id === row.id).data;
 
@@ -630,6 +649,8 @@ export default {
         }
       }
       this.fieldsCount = this.form.rules.length || 0
+      this.form.operator_type='update'
+      this.open = true;
     },
     /** 提交按钮 */
     submitForm: function () {
@@ -643,7 +664,7 @@ export default {
 
           this.form.data = data
 
-          if (this.form.id) {
+          if (this.form.operator_type==='update') {
             updateRule(this.form).then(response => {
               this.$modal.msgSuccess("修改成功");
               this.open = false;
@@ -675,7 +696,11 @@ export default {
       if (!this.form.rules) {
         this.form.rules = []
       }
-      this.form.rules.push({filters:[], filter_patterns:[[]]})
+      this.form.rules.push({
+        rid: this.form.rules && this.form.rules.length > 0 ? Math.max.apply(Math, e=>e.rid)+1 : 0,
+        filters:[],
+        filter_patterns:[[]]
+      })
       this.changeWord()
     },
     handleSelectedSource(rule, index) {
