@@ -36,6 +36,9 @@ public class ModelServiceImpl implements IModelService {
 
     @Override
     public int changeStatus(Model model) {
+        Model detail = this.selectModels(model).get(0);
+        detail.setActive(model.getActive());
+        this.sendChangeModel(detail, EventType.update);
         return modelMapper.updateModel(model);
     }
 
@@ -73,12 +76,16 @@ public class ModelServiceImpl implements IModelService {
 
     public void sendChangeModel(Model model, EventType eventType) {
         String uuId = UUID.randomUUID().toString();
-        if (model.getId() != null) {
-            model.getData().put("mid", model.getId());
-        }
+        Map<String, Object> data = model.getData();
+
         Map<String, Object> res = new HashMap<>();
         res.put("type", eventType.toString());
-        res.put("model", model.getData());
+        res.put("model", data);
+
+        if (model.getId() != null) {
+            data.put("mid", model.getId());
+        }
+        data.put("active", model.getActive());
         try {
             this.hotSwappingProducer.send(new ProducerRecord<>(
                     hotSwappingConfig.getTopic(),

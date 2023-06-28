@@ -62,7 +62,7 @@
           <el-table-column label="模型id" align="center" key="id" prop="id" v-if="columns[0].visible"/>
           <el-table-column label="模型名称" align="center" key="name" prop="name" v-if="columns[1].visible"
                            :show-overflow-tooltip="true"/>
-          <el-table-column label="状态" align="center" key="status" v-if="columns[2].visible">
+          <el-table-column label="状态" align="center" key="active" v-if="columns[2].visible">
             <template slot-scope="scope">
               <el-switch
                 v-model="scope.row.active"
