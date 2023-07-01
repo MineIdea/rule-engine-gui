@@ -176,7 +176,10 @@
           <template v-for="(newRule, index) in form.rules">
             <el-row>
               <el-col>
-                规则{{index}}
+                <el-button type="danger" icon="el-icon-delete" circle size="small" @click="delRule(index)"></el-button>
+              </el-col>
+              <el-col>
+                规则{{newRule.rid}}
               </el-col>
               <el-col>
                 <el-scrollbar height="400px">
@@ -226,6 +229,9 @@
                     <el-scrollbar height="400px">
                       <template v-for="(filterItem, filterIndex) in newRule.filters">
                         <el-row>
+                          <el-col>
+                            <el-button type="danger" icon="el-icon-delete" circle size="small" @click="delFilter(newRule, filterIndex)"></el-button>
+                          </el-col>
                           <el-col>过滤条件{{filterItem.fid}}</el-col>
                         </el-row>
                         <el-row>
@@ -703,6 +709,10 @@ export default {
       })
       this.changeWord()
     },
+    delRule(index) {
+      this.form.rules.splice(index, 1)
+      this.changeWord()
+    },
     handleSelectedSource(rule, index) {
       rule.selectedSource = this.sourceList.find(e=>e.name===rule.source)
       this.changeWord()
@@ -717,6 +727,9 @@ export default {
       let fid = rule.filters && rule.filters.length>0 ? Math.max.apply(Math, rule.filters.map(e=>e.fid)) + 1 : 0
       rule.filters.push({fid: fid})
       this.changeWord()
+    },
+    delFilter(rule, index) {
+      rule.filters.splice(index, 1)
     },
     handlerFilterName(filter, rule) {
       filter.data_type = rule.selectedSource.data.fields.find(e=>e.name===filter.name).data_type
