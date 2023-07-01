@@ -40,4 +40,11 @@
             now()
         )
     </insert>
+
+    <delete id="delAlerts" parameterType="Integer">
+        delete from rule_alert where id in
+        <foreach collection="array" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
 </mapper>

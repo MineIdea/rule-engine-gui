@@ -11,4 +11,6 @@ public interface AlertMapper {
     public List<Alert> selectAlerts(Alert alert);
 
     public int insertAlert(Alert alert);
+
+    public int delAlerts(Integer[] alertIds);
 }

@@ -7,3 +7,10 @@ export function listAlert(query) {
     params: query
   })
 }
+
+export function delAlert(alertId) {
+  return request({
+    url: 'rules/alert/' + alertId,
+    method: 'delete'
+  })
+}

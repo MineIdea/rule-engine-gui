@@ -273,7 +273,7 @@
 </style>
 
 <script>
-import {listAlert} from "@/api/rules/alert"
+import {listAlert, delAlert} from "@/api/rules/alert"
 import { getToken } from "@/utils/auth";
 import Treeselect from "@riophae/vue-treeselect";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
@@ -521,7 +521,7 @@ export default {
     handleDelete(row) {
       const sourceIds = row.id || this.ids;
       this.$modal.confirm('是否确认删除数据源编号为"' + sourceIds + '"的数据项？').then(function() {
-        return delSource(sourceIds);
+        return delAlert(sourceIds);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");

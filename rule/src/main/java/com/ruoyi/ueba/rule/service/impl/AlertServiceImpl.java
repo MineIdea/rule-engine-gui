@@ -21,4 +21,9 @@ public class AlertServiceImpl implements IAlertService {
     public List<Alert> listAlert(Alert alert) {
         return alertMapper.selectAlerts(alert);
     }
+
+    @Override
+    public int delAlerts(Integer[] alertIds) {
+        return alertMapper.delAlerts(alertIds);
+    }
 }

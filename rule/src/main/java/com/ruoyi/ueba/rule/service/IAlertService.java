@@ -11,4 +11,6 @@ import java.util.List;
 @Service
 public interface IAlertService {
     List<Alert> listAlert(Alert alert);
+
+    int delAlerts(Integer[] alertIds);
 }
