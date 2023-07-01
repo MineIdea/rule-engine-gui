@@ -180,6 +180,9 @@
           <el-scrollbar height="400px">
             <template v-for="(newRow, index) in form.fields">
               <el-row :span="24">
+                <el-col>
+                  <el-button type="danger" icon="el-icon-delete" circle size="mini" @click="deleteField(newRow, index)"></el-button>
+                </el-col>
                 <el-col :span="12">
                   <el-form-item label="字段">
                     <el-input v-model="newRow.name" placeholder="字段名称" @input="changeWord"/>
@@ -555,6 +558,10 @@ export default {
         this.form.fields = []
       }
       this.form.fields.push({id:this.fieldsCount, name: '', data_type: ''})
+    },
+    deleteField(newRow, index) {
+      this.fieldsCount--;
+      this.form.fields.splice(index, 1)
     },
     changeWord() {
       this.$forceUpdate()
