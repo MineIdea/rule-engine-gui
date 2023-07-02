@@ -41,6 +41,19 @@
         </el-form>
 
         <el-row :gutter="10" class="mb8">
+          <el-col :span="1.5">
+            <el-button
+              type="danger"
+              plain
+              icon="el-icon-delete"
+              size="mini"
+              :disabled="multiple"
+              @click="handleDelete"
+              v-hasPermi="['rule:model:remove']"
+            >删除
+            </el-button>
+          </el-col>
+
           <right-toolbar :showSearch.sync="showSearch" @queryTable="getList" :columns="columns"></right-toolbar>
         </el-row>
 
@@ -209,40 +222,20 @@
         size="default"
         border
       >
+        <el-descriptions-item label="数据源uuId">
+          {{sourceDetail.uuId}}
+        </el-descriptions-item>
         <el-descriptions-item label="数据源名称">
           {{sourceDetail.name}}
         </el-descriptions-item>
         <el-descriptions-item label="数据源描述">
           {{sourceDetail.data.desc}}
         </el-descriptions-item>
-        <el-descriptions-item label="数据源格式">
-          {{sourceDetail.format}}
+        <el-descriptions-item label="数据源描述">
+          <el-scrollbar height="400px">
+            {{sourceDetail.data}}
+          </el-scrollbar>
         </el-descriptions-item>
-        <el-descriptions-item label="数据源类型">
-          {{sourceDetail.data.type}}
-        </el-descriptions-item>
-        <el-descriptions-item label="server地址">
-          {{sourceDetail.data.server}}
-        </el-descriptions-item>
-        <el-descriptions-item label="订阅topic">
-          {{sourceDetail.data.topic}}
-        </el-descriptions-item>
-        <el-descriptions-item label="时间属性字段">
-          {{sourceDetail.data.event_time_field}}
-        </el-descriptions-item>
-        <template v-for="(item, index) in sourceDetail.data.fields">
-          <el-descriptions-item :label="'字段'+index">
-            <el-descriptions
-              class="margin-top"
-              :column="1"
-              size="default"
-              border
-            >
-              <el-descriptions-item label="字段名称">{{item.name}}</el-descriptions-item>
-              <el-descriptions-item label="字段类型">{{item.data_type}}</el-descriptions-item>
-            </el-descriptions>
-          </el-descriptions-item>
-        </template>
       </el-descriptions>
     </el-dialog>
   </div>
@@ -450,13 +443,13 @@ export default {
     },
     showDetail(row) {
       this.reset();
-      this.title = "数据源详情";
+      this.title = "告警详情详情";
       this.detailOpen = true;
       this.sourceDetail = {}
       this.sourceDetail["id"] = row.id;
+      this.sourceDetail["uuId"] = row.uuId;
       this.sourceDetail["name"] = row.name;
-      this.sourceDetail["format"] = row.format;
-      this.sourceDetail["active"] = row.active;
+      this.sourceDetail["desc"] = row.desc;
       this.sourceDetail["data"] = row.data;
     },
     /** 新增按钮操作 */
@@ -520,7 +513,7 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const sourceIds = row.id || this.ids;
-      this.$modal.confirm('是否确认删除数据源编号为"' + sourceIds + '"的数据项？').then(function() {
+      this.$modal.confirm('是否确认删除告警编号为"' + sourceIds + '"的数据项？').then(function() {
         return delAlert(sourceIds);
       }).then(() => {
         this.getList();
